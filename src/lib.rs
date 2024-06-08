@@ -1,7 +1,7 @@
 use macroquad::prelude::*;
 
 pub struct Kinematic {
-    position: Vec2,
-    velocity: Vec2,
-    acceleration: Vec2,
+    pub position: Vec2,
+    pub velocity: Vec2,
+    pub acceleration: Vec2,
 }
