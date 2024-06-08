@@ -1,4 +1,4 @@
-use macroquad::math::Vec2;
+use macroquad::prelude::*;
 
 pub struct Kinematic {
     position: Vec2,
