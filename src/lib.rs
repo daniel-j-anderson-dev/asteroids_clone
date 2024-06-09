@@ -5,3 +5,9 @@ pub struct Kinematic {
     pub velocity: Vec2,
     pub acceleration: Vec2,
 }
+impl Kinematic {
+    pub fn step(&mut self) {
+        self.velocity += self.acceleration;
+        self.position += self.velocity;
+    }
+}
