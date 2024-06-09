@@ -1,4 +1,4 @@
-use asteroids::Kinematic;
+use asteroids::{Kinematic, Player};
 use macroquad::prelude::*;
 
 fn settings() -> Conf {
@@ -15,16 +15,33 @@ fn settings() -> Conf {
 
 #[macroquad::main(settings)]
 async fn main() {
-    let foo = Kinematic {
-        position: vec2(screen_width(), screen_height()) / 2.0,
-        velocity: vec2(0.0, 0.0),
-        acceleration: vec2(0.0, 0.0),
+    let mut foo = Player {
+        kinematic: Kinematic {
+            position: vec2(screen_width(), screen_height()) / 2.0,
+            velocity: vec2(0.0, 0.0),
+            acceleration: vec2(0.0, 0.0),
+        },
+        lives: 3,
+        orientation: 0.0,
     };
 
     loop {
         clear_background(BLACK);
 
-        draw_rectangle(foo.position.x, foo.position.y, 2.0, 2.0, WHITE);
+        draw_line(
+            foo.position().x,
+            foo.position().y,
+            foo.position().x + (50.0 * foo.orientation.cos()),
+            foo.position().y + (50.0 * foo.orientation.sin()),
+            5.0,
+            WHITE,
+        );
+
+        foo.handle_input();
+
+        println!("{}", foo.orientation);
+
+        // foo.step();
         next_frame().await;
     }
 }
