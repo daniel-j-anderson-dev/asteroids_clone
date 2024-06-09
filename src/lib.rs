@@ -8,6 +8,7 @@ pub struct Player {
 impl Player {
     pub const ROTATION_DELTA: f32 = 0.1;
     pub const SIZE: f32 = 20.0;
+    const MAX_SPEED: f32 = 3.0;
     const POSITION_OFFSET: Vec2 = vec2(0.0, Self::SIZE / - 4.0);
     const FRONT_OFFSET: Vec2 = vec2(0.0, Self::SIZE);
     const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.0, 0.0);
@@ -42,6 +43,15 @@ impl Player {
         }
         if is_key_down(KeyCode::Right) {
             self.orientation += Self::ROTATION_DELTA;
+        }
+        if is_key_down(KeyCode::Up) {
+            self.kinematic.acceleration = self.rotation_matrix() * vec2(0.0, 1.0);
+        } else {
+            self.kinematic.acceleration = Vec2::ZERO;
+        }
+        // if the current speed exceeds the max then move velocity towards zero a little
+        if self.kinematic.velocity.length() > Self::MAX_SPEED {
+            self.kinematic.velocity = self.kinematic.velocity.lerp(Vec2::ZERO, 0.1);
         }
     }
     pub fn rotation_matrix(&self) -> Mat2 {
