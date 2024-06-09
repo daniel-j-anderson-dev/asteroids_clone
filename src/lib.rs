@@ -12,7 +12,8 @@ impl Player {
     const FRONT_OFFSET: Vec2 = vec2(0.0, Self::SIZE);
     const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.0, 0.0);
     const RIGHT_OFFSET: Vec2 = vec2(Self::SIZE / 2.0, 0.0);
-
+}
+impl Player {
     pub fn default() -> Player {
         return Player {
             kinematic: Kinematic {
@@ -24,14 +25,6 @@ impl Player {
             orientation: 0.0,
         };
     }
-    pub fn handle_input(&mut self) {
-        if is_key_down(KeyCode::Left) {
-            self.orientation -= Self::ROTATION_DELTA;
-        }
-        if is_key_down(KeyCode::Right) {
-            self.orientation += Self::ROTATION_DELTA;
-        }
-    }
     pub fn position(&self) -> Vec2 {
         return self.kinematic.position;
     }
@@ -40,6 +33,16 @@ impl Player {
     }
     pub fn acceleration(&self) -> Vec2 {
         return self.kinematic.acceleration;
+    }
+}
+impl Player {
+    pub fn handle_input(&mut self) {
+        if is_key_down(KeyCode::Left) {
+            self.orientation -= Self::ROTATION_DELTA;
+        }
+        if is_key_down(KeyCode::Right) {
+            self.orientation += Self::ROTATION_DELTA;
+        }
     }
     pub fn rotation_matrix(&self) -> Mat2 {
         return mat2( //     top row                  bottom row
