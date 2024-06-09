@@ -94,6 +94,8 @@ impl Player {
 
         self.kinematic.apply_friction();
         self.keep_on_screen();
+
+        self.kinematic.step();
     }
     pub fn draw(&self) {
         let (v1, v2, v3) = self.vertices();

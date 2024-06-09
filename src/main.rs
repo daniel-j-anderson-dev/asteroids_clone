@@ -24,8 +24,6 @@ async fn main() {
 
         player.handle_input();
 
-        player.kinematic.step();
-
         next_frame().await;
     }
 }
