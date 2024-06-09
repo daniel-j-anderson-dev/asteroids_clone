@@ -81,7 +81,7 @@ impl Player {
             self.orientation += Self::ROTATION_DELTA;
         }
         if is_key_down(KeyCode::Up) {
-            let forward = self.rotation_matrix() * vec2(0.0, 0.1);
+            let forward = self.rotation_matrix() * vec2(0.0, 0.2);
 
             // apply acceleration (using linear interpolation aka lerp)
             self.kinematic.acceleration = self.kinematic.acceleration.lerp(forward, 0.1);
