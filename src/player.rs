@@ -9,6 +9,7 @@ pub struct Player {
 impl Player {
     pub const SIZE: f32 = 20.0;
     pub const ROTATION_DELTA: f32 = 0.1;
+    pub const THRUSTER_ACCELERATION: f32 = 0.2;
 
     const MAX_SPEED: f32 = Self::SIZE * 2.0;
     const MAX_SPEED_SQUARED: f32 = Self::MAX_SPEED * Self::MAX_SPEED;
@@ -81,7 +82,7 @@ impl Player {
             self.orientation += Self::ROTATION_DELTA;
         }
         if is_key_down(KeyCode::Up) {
-            let forward = self.rotation_matrix() * vec2(0.0, 0.2);
+            let forward = self.rotation_matrix() * vec2(0.0, Self::THRUSTER_ACCELERATION);
 
             // apply acceleration (using linear interpolation aka lerp)
             self.kinematic.acceleration = self.kinematic.acceleration.lerp(forward, 0.1);
