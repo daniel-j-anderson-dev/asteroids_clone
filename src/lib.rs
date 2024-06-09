@@ -8,11 +8,12 @@ pub struct Player {
 impl Player {
     pub const ROTATION_DELTA: f32 = 0.1;
     pub const SIZE: f32 = 20.0;
-    const MAX_SPEED: f32 = 3.0;
+    const MAX_SPEED: f32 = Self::SIZE * 2.0;
+    const MAX_SPEED_SQUARED: f32 = Self::MAX_SPEED * Self::MAX_SPEED;
     const POSITION_OFFSET: Vec2 = vec2(0.0, Self::SIZE / -4.0);
     const FRONT_OFFSET: Vec2 = vec2(0.0, Self::SIZE);
-    const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.0, 0.0);
-    const RIGHT_OFFSET: Vec2 = vec2(Self::SIZE / 2.0, 0.0);
+    const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.5, 0.0);
+    const RIGHT_OFFSET: Vec2 = vec2(Self::SIZE / 2.5, 0.0);
 }
 impl Player {
     pub fn default() -> Player {
@@ -37,6 +38,21 @@ impl Player {
     }
 }
 impl Player {
+    pub fn keep_on_screen(&mut self) {
+        let next_position = self.kinematic.position + self.kinematic.velocity;
+        if next_position.x < 0.0 {
+            self.kinematic.position.x = screen_width();
+        }
+        if next_position.x > screen_width() {
+            self.kinematic.position.x = 0.0;
+        }
+        if next_position.y < 0.0 {
+            self.kinematic.position.y = screen_height();
+        }
+        if next_position.y > screen_height() {
+            self.kinematic.position.y = 0.0;
+        }
+    }
     pub fn handle_input(&mut self) {
         if is_key_down(KeyCode::Left) {
             self.orientation -= Self::ROTATION_DELTA;
@@ -45,14 +61,22 @@ impl Player {
             self.orientation += Self::ROTATION_DELTA;
         }
         if is_key_down(KeyCode::Up) {
-            self.kinematic.acceleration = self.rotation_matrix() * vec2(0.0, 1.0);
-        } else {
-            self.kinematic.acceleration = Vec2::ZERO;
+            // apply acceleration (using linear interpolation aka lerp)
+            self.kinematic.acceleration = self
+                .kinematic
+                .acceleration
+                .lerp(self.rotation_matrix() * vec2(0.0, 0.1), 0.1);
         }
-        // if the current speed exceeds the max then move velocity towards zero a little
-        if self.kinematic.velocity.length() > Self::MAX_SPEED {
+
+        if self.kinematic.velocity.length_squared() > Self::MAX_SPEED_SQUARED {
             self.kinematic.velocity = self.kinematic.velocity.lerp(Vec2::ZERO, 0.1);
         }
+
+        // apply friction (using linear interpolation aka lerp)
+        self.kinematic.acceleration = self.kinematic.acceleration.lerp(Vec2::ZERO, 0.02);
+        self.kinematic.velocity = self.kinematic.velocity.lerp(Vec2::ZERO, 0.02);
+
+        self.keep_on_screen();
     }
     pub fn rotation_matrix(&self) -> Mat2 {
         return mat2(
