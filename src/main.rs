@@ -31,9 +31,9 @@ async fn main() {
         player.draw();
 
         player.handle_input();
+
         player.kinematic.step();
 
-        // foo.step();
         next_frame().await;
     }
 }

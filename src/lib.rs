@@ -9,7 +9,7 @@ impl Player {
     pub const ROTATION_DELTA: f32 = 0.1;
     pub const SIZE: f32 = 20.0;
     const MAX_SPEED: f32 = 3.0;
-    const POSITION_OFFSET: Vec2 = vec2(0.0, Self::SIZE / - 4.0);
+    const POSITION_OFFSET: Vec2 = vec2(0.0, Self::SIZE / -4.0);
     const FRONT_OFFSET: Vec2 = vec2(0.0, Self::SIZE);
     const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.0, 0.0);
     const RIGHT_OFFSET: Vec2 = vec2(Self::SIZE / 2.0, 0.0);
@@ -55,7 +55,8 @@ impl Player {
         }
     }
     pub fn rotation_matrix(&self) -> Mat2 {
-        return mat2( //     top row                  bottom row
+        return mat2(
+            //     top row                  bottom row
             vec2(self.orientation.cos(), self.orientation.sin()), // left column
             vec2(-self.orientation.sin(), self.orientation.cos()), // right column
         );
@@ -63,7 +64,7 @@ impl Player {
     pub fn vertices(&self) -> (Vec2, Vec2, Vec2) {
         let rotation = self.rotation_matrix();
         let center = self.kinematic.position + (rotation * Self::POSITION_OFFSET);
-    
+
         let front = center + (rotation * Self::FRONT_OFFSET);
         let left = center + (rotation * Self::LEFT_OFFSET);
         let right = center + (rotation * Self::RIGHT_OFFSET);
@@ -73,7 +74,12 @@ impl Player {
     pub fn draw(&self) {
         let (v1, v2, v3) = self.vertices();
         draw_triangle(v1, v2, v3, WHITE);
-        draw_circle(self.kinematic.position.x, self.kinematic.position.y, 2.5, RED);
+        draw_circle(
+            self.kinematic.position.x,
+            self.kinematic.position.y,
+            2.5,
+            RED,
+        );
     }
 }
 
