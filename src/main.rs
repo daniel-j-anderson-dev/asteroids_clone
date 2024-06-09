@@ -15,7 +15,7 @@ fn settings() -> Conf {
 
 #[macroquad::main(settings)]
 async fn main() {
-    let mut foo = Player {
+    let mut player = Player {
         kinematic: Kinematic {
             position: vec2(screen_width(), screen_height()) / 2.0,
             velocity: vec2(0.0, 0.0),
@@ -28,18 +28,9 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
-        draw_line(
-            foo.position().x,
-            foo.position().y,
-            foo.position().x + (50.0 * foo.orientation.cos()),
-            foo.position().y + (50.0 * foo.orientation.sin()),
-            5.0,
-            WHITE,
-        );
+        player.draw();
 
-        foo.handle_input();
-
-        println!("{}", foo.orientation);
+        player.handle_input();
 
         // foo.step();
         next_frame().await;
