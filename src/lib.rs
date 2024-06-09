@@ -16,9 +16,9 @@ impl Player {
     pub fn default() -> Player {
         return Player {
             kinematic: Kinematic {
-                position: vec2(screen_width(), screen_height()) / 2.0,
-                velocity: vec2(0.0, 0.0),
-                acceleration: vec2(0.0, 0.0),
+                position: screen_origin(),
+                velocity: Vec2::ZERO,
+                acceleration: Vec2::ZERO,
             },
             lives: 3,
             orientation: 0.0,
@@ -42,9 +42,9 @@ impl Player {
         return self.kinematic.acceleration;
     }
     pub fn rotation_matrix(&self) -> Mat2 {
-        return mat2(
-            vec2(self.orientation.cos(), self.orientation.sin()),
-            vec2(-self.orientation.sin(), self.orientation.cos()),
+        return mat2( //     top row                  bottom row
+            vec2(self.orientation.cos(), self.orientation.sin()), // left column
+            vec2(-self.orientation.sin(), self.orientation.cos()), // right column
         );
     }
     pub fn vertices(&self) -> (Vec2, Vec2, Vec2) {
@@ -74,4 +74,11 @@ impl Kinematic {
         self.velocity += self.acceleration;
         self.position += self.velocity;
     }
+}
+
+pub fn screen_dimensions() -> Vec2 {
+    return vec2(screen_width(), screen_height());
+}
+pub fn screen_origin() -> Vec2 {
+    return screen_dimensions() / 2.0;
 }
