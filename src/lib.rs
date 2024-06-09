@@ -36,6 +36,23 @@ impl Player {
     pub fn acceleration(&self) -> Vec2 {
         return self.kinematic.acceleration;
     }
+    pub fn rotation_matrix(&self) -> Mat2 {
+        return mat2(
+            //     top row                  bottom row
+            vec2(self.orientation.cos(), self.orientation.sin()), // left column
+            vec2(-self.orientation.sin(), self.orientation.cos()), // right column
+        );
+    }
+    pub fn vertices(&self) -> (Vec2, Vec2, Vec2) {
+        let rotation = self.rotation_matrix();
+        let center = self.kinematic.position + (rotation * Self::POSITION_OFFSET);
+
+        let front = center + (rotation * Self::FRONT_OFFSET);
+        let left = center + (rotation * Self::LEFT_OFFSET);
+        let right = center + (rotation * Self::RIGHT_OFFSET);
+
+        return (front, left, right);
+    }
 }
 impl Player {
     pub fn keep_on_screen(&mut self) {
@@ -77,23 +94,6 @@ impl Player {
         self.kinematic.velocity = self.kinematic.velocity.lerp(Vec2::ZERO, 0.02);
 
         self.keep_on_screen();
-    }
-    pub fn rotation_matrix(&self) -> Mat2 {
-        return mat2(
-            //     top row                  bottom row
-            vec2(self.orientation.cos(), self.orientation.sin()), // left column
-            vec2(-self.orientation.sin(), self.orientation.cos()), // right column
-        );
-    }
-    pub fn vertices(&self) -> (Vec2, Vec2, Vec2) {
-        let rotation = self.rotation_matrix();
-        let center = self.kinematic.position + (rotation * Self::POSITION_OFFSET);
-
-        let front = center + (rotation * Self::FRONT_OFFSET);
-        let left = center + (rotation * Self::LEFT_OFFSET);
-        let right = center + (rotation * Self::RIGHT_OFFSET);
-
-        return (front, left, right);
     }
     pub fn draw(&self) {
         let (v1, v2, v3) = self.vertices();
