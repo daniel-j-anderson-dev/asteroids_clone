@@ -7,10 +7,12 @@ pub struct Player {
     pub orientation: f32,
 }
 impl Player {
-    pub const ROTATION_DELTA: f32 = 0.1;
     pub const SIZE: f32 = 20.0;
+    pub const ROTATION_DELTA: f32 = 0.1;
+
     const MAX_SPEED: f32 = Self::SIZE * 2.0;
     const MAX_SPEED_SQUARED: f32 = Self::MAX_SPEED * Self::MAX_SPEED;
+
     const POSITION_OFFSET: Vec2 = vec2(0.0, Self::SIZE / -4.0);
     const FRONT_OFFSET: Vec2 = vec2(0.0, Self::SIZE);
     const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.5, 0.0);
@@ -82,10 +84,7 @@ impl Player {
             let forward = self.rotation_matrix() * vec2(0.0, 0.1);
 
             // apply acceleration (using linear interpolation aka lerp)
-            self.kinematic.acceleration = self
-                .kinematic
-                .acceleration
-                .lerp(forward, 0.1);
+            self.kinematic.acceleration = self.kinematic.acceleration.lerp(forward, 0.1);
         }
 
         if self.kinematic.velocity.length_squared() > Self::MAX_SPEED_SQUARED {
