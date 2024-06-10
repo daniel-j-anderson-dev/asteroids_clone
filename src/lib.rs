@@ -1,7 +1,8 @@
 pub mod kinematic;
 pub mod player;
+pub mod asteroid;
 
-pub use crate::{kinematic::*, player::*};
+pub use crate::{kinematic::*, player::*, asteroid::*};
 use macroquad::prelude::*;
 
 pub fn screen_dimensions() -> Vec2 {

@@ -1,4 +1,4 @@
-use asteroids::Player;
+use asteroids::*;
 use macroquad::prelude::*;
 
 fn settings() -> Conf {
