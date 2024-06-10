@@ -19,11 +19,15 @@ Platforms
     - Run: `cargo run`. this will build and immediately execute
   - wasm (Web Assembly)
     - Build:
+      - `cargo run --example build_wasm`
+
+      **OR**
+
       1) Add wasm target. `rustup target add wasm32-unknown-unknown`
       2) Build wasm binary. `cargo build --target wasm32-unknown-unknown`. output will be at `./target/wasm32-unknown-unknown/debug/asteroids.wasm`
+      3) Copy the wasm binary to `./examples/wasm/asteroids.wasm`
     - Run:
       1) Build
-      2) Copy the wasm binary to `./examples/wasm/asteroids.wasm`
-      3) Run the example server `cargo run --example wasm`
-      4) Open a [compatible browser](https://developer.mozilla.org/en-US/docs/WebAssembly#browser_compatibility) to `localhost:5000`
+      2) Run the example server `cargo run --example wasm`
+      3) Open a [compatible browser](https://developer.mozilla.org/en-US/docs/WebAssembly#browser_compatibility) to `localhost:5000`
 
