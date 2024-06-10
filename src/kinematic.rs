@@ -18,8 +18,8 @@ impl Kinematic {
         self.velocity = v_1;
     }
     pub fn step_friction(&mut self) {
-        // apply friction (using linear interpolation aka lerp)
-        self.acceleration = self.acceleration.lerp(Vec2::ZERO, 0.02);
-        self.velocity = self.velocity.lerp(Vec2::ZERO, 0.02);
+        // apply friction (using linear interpolation with <0, 0> aka lerp)
+        self.acceleration += (Vec2::ZERO - self.acceleration) * 0.02;
+        self.velocity += (Vec2::ZERO - self.velocity) * 0.02;
     }
 }
