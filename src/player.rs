@@ -1,13 +1,17 @@
+use std::f32::consts::TAU;
+
 use super::*;
 use macroquad::prelude::*;
 
 pub struct Player {
     pub kinematic: Kinematic,
     pub lives: usize,
+    /// An angle in radians from the positive y-axis
     pub orientation: f32,
 }
 impl Player {
     pub const SIZE: f32 = 20.0;
+    /// An angle in radians
     pub const ROTATION_DELTA: f32 = 0.1;
     pub const THRUSTER_ACCELERATION: f32 = 0.2;
 
@@ -38,6 +42,9 @@ impl Player {
     }
     pub fn acceleration(&self) -> Vec2 {
         return self.kinematic.acceleration;
+    }
+    pub fn orientation(&self) -> f32 {
+        return self.orientation;
     }
     pub fn rotation_matrix(&self) -> Mat2 {
         return mat2(
@@ -78,10 +85,10 @@ impl Player {
     }
     pub fn handle_input(&mut self) {
         if is_key_down(KeyCode::Left) {
-            self.orientation -= Self::ROTATION_DELTA;
+            self.orientation = (self.orientation - Self::ROTATION_DELTA) % TAU;
         }
         if is_key_down(KeyCode::Right) {
-            self.orientation += Self::ROTATION_DELTA;
+            self.orientation = (self.orientation + Self::ROTATION_DELTA) % TAU;
         }
         if is_key_down(KeyCode::Up) {
             // let (front, _, _) = self.vertices();
