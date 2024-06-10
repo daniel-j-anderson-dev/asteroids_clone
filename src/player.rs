@@ -84,14 +84,19 @@ impl Player {
             self.orientation += Self::ROTATION_DELTA;
         }
         if is_key_down(KeyCode::Up) {
-            let forward = self.rotation_matrix() * vec2(0.0, Self::THRUSTER_ACCELERATION);
+            // let (front, _, _) = self.vertices();
+            // let forward = (front - self.kinematic.position).normalize_or_zero();
+            // let thrust = forward * Self::THRUSTER_ACCELERATION;
+            
+            let rotation = self.rotation_matrix();
+            let forward = rotation * Self::FRONT_OFFSET;
+            let thrust = forward * Self::THRUSTER_ACCELERATION;
 
-            // apply acceleration (using linear interpolation aka lerp)
-            self.kinematic.acceleration = self.kinematic.acceleration.lerp(forward, 0.1);
+            self.kinematic.acceleration += (thrust - self.kinematic.acceleration) * 0.1;
         }
 
         if self.kinematic.velocity.length_squared() > Self::MAX_SPEED_SQUARED {
-            self.kinematic.velocity = Self::MAX_SPEED * self.kinematic.velocity.normalize();
+            self.kinematic.velocity = self.kinematic.velocity.normalize() * Self::MAX_SPEED;
         }
 
         self.kinematic.step_friction();
