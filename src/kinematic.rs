@@ -6,11 +6,11 @@ pub struct Kinematic {
     pub acceleration: Vec2,
 }
 impl Kinematic {
-    pub fn step(&mut self) {
+    pub fn step_motion(&mut self) {
         self.velocity += self.acceleration;
         self.position += self.velocity;
     }
-    pub fn apply_friction(&mut self) {
+    pub fn step_friction(&mut self) {
         // apply friction (using linear interpolation aka lerp)
         self.acceleration = self.acceleration.lerp(Vec2::ZERO, 0.02);
         self.velocity = self.velocity.lerp(Vec2::ZERO, 0.02);
