@@ -89,7 +89,7 @@ impl Player {
             // let thrust = forward * Self::THRUSTER_ACCELERATION;
             
             let rotation = self.rotation_matrix();
-            let forward = rotation * Self::FRONT_OFFSET;
+            let forward = rotation * Self::FRONT_OFFSET.normalize();
             let thrust = forward * Self::THRUSTER_ACCELERATION;
 
             self.kinematic.acceleration += (thrust - self.kinematic.acceleration) * 0.1;
