@@ -21,7 +21,7 @@ fn main() {
         "./examples/wasm/asteroids.wasm",
     )
     .expect("Failed to copy wasm binary to example folder");
-    println!("wasm binary is in built and i place`");
+    println!("wasm binary is in built and its place`");
 }
 
 fn print_output(message: &str, output: Output) {
