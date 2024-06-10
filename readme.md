@@ -14,7 +14,7 @@ Prerequisites
   - [Install rust](https://www.rust-lang.org/tools/install)
 
 Platforms
-  - Native
+  - Linux, MacOS, Windows
     - Build: `cargo build`. output will be in `./target/debug/asteroids`
     - Run: `cargo run`. this will build and immediately execute
   - wasm (Web Assembly)
