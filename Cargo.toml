@@ -5,9 +5,8 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.4.8"
-tower-http = { version = "0.5.2", features = ["fs"] }
 
 [dev-dependencies]
 axum = { version = "0.7.5", features = ["macros"] }
 tokio = { version = "1.38.0", features = ["rt-multi-thread"] }
-tower-http = "0.5.2"
+tower-http = { version = "0.5.2", features = ["fs"]}
