@@ -8,16 +8,17 @@ fn main() {
         .args(&["target", "add", "wasm32-unknown-unknown"])
         .output()
         .expect("Failed to add wasm target. is rustup installed?");
-    print_output("Add wasm target", output);
+    print_output("wasm target is available", output);
 
+    println!("building wasm; please wait...");
     let output = Command::new("cargo")
-        .args(&["build", "--target", "wasm32-unknown-unknown"])
+        .args(&["build", "--release", "--target", "wasm32-unknown-unknown"])
         .output()
         .expect("Failed to build wasm binary.");
-    print_output("Build wasm binary", output);
+    print_output("wasm binary built!", output);
 
     fs::copy(
-        "./target/wasm32-unknown-unknown/debug/asteroids.wasm",
+        "./target/wasm32-unknown-unknown/release/asteroids.wasm",
         "./examples/wasm/asteroids.wasm",
     )
     .expect("Failed to copy wasm binary to example folder");
