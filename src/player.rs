@@ -14,10 +14,9 @@ impl Player {
     const MAX_SPEED: f32 = Self::SIZE * 2.0;
     const MAX_SPEED_SQUARED: f32 = Self::MAX_SPEED * Self::MAX_SPEED;
 
-    const POSITION_OFFSET: Vec2 = vec2(0.0, Self::SIZE / -4.0);
     const FRONT_OFFSET: Vec2 = vec2(0.0, Self::SIZE);
-    const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.5, 0.0);
-    const RIGHT_OFFSET: Vec2 = vec2(Self::SIZE / 2.5, 0.0);
+    const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.5, Self::SIZE / -4.0);
+    const RIGHT_OFFSET: Vec2 = vec2(Self::SIZE / 2.5, Self::SIZE / -4.0);
 }
 impl Player {
     pub fn default() -> Player {
@@ -49,11 +48,10 @@ impl Player {
     }
     pub fn vertices(&self) -> (Vec2, Vec2, Vec2) {
         let rotation = self.rotation_matrix();
-        let center = self.kinematic.position + (rotation * Self::POSITION_OFFSET);
 
-        let front = center + (rotation * Self::FRONT_OFFSET);
-        let left = center + (rotation * Self::LEFT_OFFSET);
-        let right = center + (rotation * Self::RIGHT_OFFSET);
+        let front = (rotation * Self::FRONT_OFFSET) + self.kinematic.position;
+        let left = (rotation * Self::LEFT_OFFSET) + self.kinematic.position;
+        let right = (rotation * Self::RIGHT_OFFSET) + self.kinematic.position;
 
         return (front, left, right);
     }
@@ -92,10 +90,9 @@ impl Player {
             self.kinematic.velocity = Self::MAX_SPEED * self.kinematic.velocity.normalize();
         }
 
-        self.kinematic.apply_friction();
+        self.kinematic.step_friction();
         self.keep_on_screen();
-
-        self.kinematic.step();
+        self.kinematic.step_motion();
     }
     pub fn draw(&self) {
         let (v1, v2, v3) = self.vertices();
