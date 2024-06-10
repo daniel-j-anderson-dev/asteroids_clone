@@ -85,7 +85,7 @@ impl Player {
         }
         if is_key_down(KeyCode::Up) {
             // let (front, _, _) = self.vertices();
-            // let forward = (front - self.kinematic.position).normalize_or_zero();
+            // let forward = (front - self.kinematic.position).normalize();
             // let thrust = forward * Self::THRUSTER_ACCELERATION;
             
             let rotation = self.rotation_matrix();
