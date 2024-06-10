@@ -19,7 +19,7 @@ Platforms
     - Run: `cargo run`. this will build and immediately execute
   - wasm (Web Assembly)
     - Build:
-      1) Add wasm target. `cargo add target wasm32-unknown-unknown`
+      1) Add wasm target. `rustup target add wasm32-unknown-unknown`
       2) Build wasm binary. `cargo build --target wasm32-unknown-unknown`. output will be at `./target/wasm32-unknown-unknown/debug/asteroids.wasm`
     - Run:
       1) Build
