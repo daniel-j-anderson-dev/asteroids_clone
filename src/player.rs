@@ -58,8 +58,12 @@ impl Player {
 }
 impl Player {
     pub fn keep_on_screen(&mut self) {
+        // take a peek forward in time!
         let next_position = self.kinematic.position + self.kinematic.velocity;
+        
+        // next frame player will travel off the left side
         if next_position.x < 0.0 {
+            // so lets teleport them to the right side
             self.kinematic.position.x = screen_width();
         }
         if next_position.x > screen_width() {
