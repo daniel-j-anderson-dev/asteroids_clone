@@ -16,9 +16,11 @@ impl Player {
 
     pub const MAX_SPEED: f32 = Self::SIZE * 2.0;
 
-    const FRONT_OFFSET: Vec2 = vec2(0.0, Self::SIZE);
-    const LEFT_OFFSET: Vec2 = vec2(-Self::SIZE / 2.5, Self::SIZE / -4.0);
-    const RIGHT_OFFSET: Vec2 = vec2(Self::SIZE / 2.5, Self::SIZE / -4.0);
+    pub const VERTICES: [Vec2; 3] = [
+        vec2(0.0, Self::SIZE),
+        vec2(-Self::SIZE / 2.5, Self::SIZE / -4.0),
+        vec2(Self::SIZE / 2.5, Self::SIZE / -4.0),
+    ];
 }
 impl Player {
     pub fn default() -> Player {
@@ -44,11 +46,7 @@ impl Player {
         let rotation = self.orientation.rotation_matrix();
         let position = self.kinematic.position();
 
-        let vertices = [
-            (rotation * Self::FRONT_OFFSET) + position,
-            (rotation * Self::LEFT_OFFSET) + position,
-            (rotation * Self::RIGHT_OFFSET) + position,
-        ];
+        let vertices = Self::VERTICES.map(|vertex| (rotation * vertex) + position);
 
         return vertices;
     }
@@ -70,7 +68,7 @@ impl Player {
 
         self.kinematic.cap_speed(Self::MAX_SPEED);
         self.kinematic.step_friction();
-        self.kinematic.keep_on_screen();
+        // self.kinematic.keep_on_screen();
         self.kinematic.step_motion();
     }
     pub fn draw(&self) {

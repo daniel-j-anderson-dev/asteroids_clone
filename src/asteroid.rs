@@ -9,28 +9,37 @@ use crate::{Kinematic, Player, RotationMatrix};
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::TAU;
 
+const FRAC_SQRT3_2: f32 = 0.86602540378443864676372317075294;
+
 pub struct Asteroid {
     kinematic: Kinematic,
+    size: f32,
     orientation: f32,
+    rotation_speed: f32,
 }
 impl Asteroid {
-    const SIZE: f32 = 20.0;
-
-    const TRIANGLE_SIZE: f32 = Self::SIZE / 2.0;
-    const HALF_TRIANGLE_SIZE: f32 = Self::TRIANGLE_SIZE / 2.0;
-
-    const VERTEX1: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);
-    const VERTEX2: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);
-    const VERTEX3: Vec2 = vec2(Self::TRIANGLE_SIZE, 0.0);
-    const VERTEX4: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);
-    const VERTEX5: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);
-    const VERTEX6: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, 0.0);
+    pub const VERTICES: [Vec2; 6] = [
+        vec2(1.0, 0.0),
+        vec2(0.5, FRAC_SQRT3_2),
+        vec2(-0.5, FRAC_SQRT3_2),
+        vec2(-1.0, 0.0),
+        vec2(-0.5, -FRAC_SQRT3_2),
+        vec2(0.5, -FRAC_SQRT3_2),
+    ];
 
     pub const MIN_SPEED: f32 = 1.0;
-    pub const MAX_SPEED: f32 = Player::MAX_SPEED;
+    pub const MAX_SPEED: f32 = Player::MAX_SPEED / 8.0;
+
+    pub const MIN_ROTATION_SPEED: f32 = Player::ROTATION_DELTA;
+    pub const MAX_ROTATION_SPEED: f32 = Player::ROTATION_DELTA * 4.0;
+
+    pub const MIN_SIZE: f32 = Player::SIZE / 2.0;
+    pub const MAX_SIZE: f32 = Player::SIZE * 2.0;
 }
 impl Asteroid {
     pub fn random() -> Self {
+        let size = gen_range(Self::MIN_SIZE, Self::MAX_SIZE);
+
         let position = vec2(
             gen_range(0.0, screen_width()),
             gen_range(0.0, screen_height()),
@@ -41,10 +50,13 @@ impl Asteroid {
         let velocity = speed * forward;
 
         let orientation = gen_range(0.0, TAU);
+        let rotation_speed = gen_range(Self::MIN_ROTATION_SPEED, Self::MAX_ROTATION_SPEED);
 
         return Self {
             kinematic: Kinematic::new(position, velocity, Vec2::ZERO),
+            size,
             orientation,
+            rotation_speed,
         };
     }
     pub fn position(&self) -> Vec2 {
@@ -65,14 +77,7 @@ impl Asteroid {
         let rotation = self.orientation.rotation_matrix();
         let position = self.kinematic.position();
 
-        let vertices = [
-            (rotation * Self::VERTEX1) + position,
-            (rotation * Self::VERTEX2) + position,
-            (rotation * Self::VERTEX3) + position,
-            (rotation * Self::VERTEX4) + position,
-            (rotation * Self::VERTEX5) + position,
-            (rotation * Self::VERTEX6) + position,
-        ];
+        let vertices = Self::VERTICES.map(|vertex| (rotation * (vertex * self.size)) + position);
 
         return vertices;
     }
