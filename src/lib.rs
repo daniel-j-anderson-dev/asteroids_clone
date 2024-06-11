@@ -12,7 +12,7 @@ pub trait RotationMatrix {
         let angle = self.angle();
         let sin = angle.sin();
         let cos = angle.cos();
-        return mat2(vec2(cos, sin), vec2(-sin, cos));
+        return mat2(vec2(-sin, cos), vec2(cos, sin));
     }
 }
 impl RotationMatrix for f32 {
