@@ -5,7 +5,7 @@ use std::f32::consts::TAU;
 pub struct Player {
     pub kinematic: Kinematic,
     pub lives: usize,
-    /// An angle in radians from the positive y-axis
+    /// An angle in radians clockwise from the positive x-axis
     pub orientation: f32,
 }
 impl Player {
