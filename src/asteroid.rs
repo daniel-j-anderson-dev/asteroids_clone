@@ -39,17 +39,19 @@ impl Asteroid {
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
-    pub fn vertices(&self) -> (Vec2, Vec2, Vec2, Vec2, Vec2, Vec2) {
+    pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
 
-        let vertex1 = (rotation * Self::VERTEX1) + self.kinematic.position;
-        let vertex2 = (rotation * Self::VERTEX2) + self.kinematic.position;
-        let vertex3 = (rotation * Self::VERTEX3) + self.kinematic.position;
-        let vertex4 = (rotation * Self::VERTEX4) + self.kinematic.position;
-        let vertex5 = (rotation * Self::VERTEX5) + self.kinematic.position;
-        let vertex6 = (rotation * Self::VERTEX6) + self.kinematic.position;
+        let vertices = [
+            (rotation * Self::VERTEX1) + self.kinematic.position,
+            (rotation * Self::VERTEX2) + self.kinematic.position,
+            (rotation * Self::VERTEX3) + self.kinematic.position,
+            (rotation * Self::VERTEX4) + self.kinematic.position,
+            (rotation * Self::VERTEX5) + self.kinematic.position,
+            (rotation * Self::VERTEX6) + self.kinematic.position,
+        ];
 
-        return (vertex1, vertex2, vertex3, vertex4, vertex5, vertex6);
+        return vertices;
     }
     pub fn draw(&self) {
         

@@ -45,14 +45,16 @@ impl Player {
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
-    pub fn vertices(&self) -> (Vec2, Vec2, Vec2) {
+    pub fn vertices(&self) -> [Vec2; 3] {
         let rotation = self.orientation.rotation_matrix();
 
-        let front = (rotation * Self::FRONT_OFFSET) + self.kinematic.position;
-        let left = (rotation * Self::LEFT_OFFSET) + self.kinematic.position;
-        let right = (rotation * Self::RIGHT_OFFSET) + self.kinematic.position;
+        let vertices = [
+            (rotation * Self::FRONT_OFFSET) + self.kinematic.position,
+            (rotation * Self::LEFT_OFFSET) + self.kinematic.position,
+            (rotation * Self::RIGHT_OFFSET) + self.kinematic.position,
+        ];
 
-        return (front, left, right);
+        return vertices;
     }
 }
 impl Player {
@@ -99,7 +101,7 @@ impl Player {
         self.kinematic.step_motion();
     }
     pub fn draw(&self) {
-        let (v1, v2, v3) = self.vertices();
+        let [v1, v2, v3] = self.vertices();
         draw_triangle(v1, v2, v3, WHITE);
         draw_circle(
             self.kinematic.position.x,
