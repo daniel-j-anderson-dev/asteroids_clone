@@ -1,6 +1,6 @@
-use crate::{screen_origin, kinematic::Kinematic, RotationMatrix};
-use std::f32::consts::TAU;
+use crate::{kinematic::Kinematic, screen_origin, RotationMatrix};
 use macroquad::prelude::*;
+use std::f32::consts::TAU;
 
 pub struct Player {
     pub kinematic: Kinematic,
