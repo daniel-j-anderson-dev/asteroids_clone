@@ -16,7 +16,7 @@ pub struct Asteroid {
     rotation_speed: f32,
 }
 impl Asteroid {
-    pub const VERTICES: [Vec2; 6] = [
+    pub const UNIT_VERTICES: [Vec2; 6] = [
         vec2(1.0, 0.0),
         vec2(0.5, FRAC_SQRT3_2),
         vec2(-0.5, FRAC_SQRT3_2),
@@ -74,7 +74,7 @@ impl Asteroid {
         let position = self.kinematic.position();
         let scale = self.size;
 
-        let vertices = Self::VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
+        let vertices = Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
 
         return vertices;
     }
