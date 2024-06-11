@@ -10,7 +10,6 @@ use macroquad::prelude::*;
 
 pub struct Asteroid {
     kinematic: Kinematic,
-    size: f32,
     orientation: f32,
 }
 impl Asteroid {
