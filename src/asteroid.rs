@@ -1,12 +1,12 @@
-use macroquad::prelude::*;
-use crate::Kinematic;
-
 //! Implement an asteroid struct that is drawn as a spinning hexagon with constant velocity
 //! random position constructor!
 //! - figure out where vertexes are relative to the origin
 //! - rotate those vertexes according to the rotation matrix
 //! - add those rotated vertexes to the position of the hexagon
 //! - draw a line between each vertex
+
+use crate::Kinematic;
+use macroquad::prelude::*;
 
 pub struct Asteroid {
     kinematic: Kinematic,
@@ -20,11 +20,11 @@ impl Asteroid {
     const HALF_TRIANGLE_SIZE: f32 = Self::TRIANGLE_SIZE / 2.0;
 
     const VERTEX1: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);
-    const VERTEX2: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);        
-    const VERTEX3: Vec2 = vec2(Self::TRIANGLE_SIZE, 0.0);    
-    const VERTEX4: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);    
-    const VERTEX5: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);    
-    const VERTEX6: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, 0.0);    
+    const VERTEX2: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);
+    const VERTEX3: Vec2 = vec2(Self::TRIANGLE_SIZE, 0.0);
+    const VERTEX4: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);
+    const VERTEX5: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);
+    const VERTEX6: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, 0.0);
 }
 impl Asteroid {
     pub fn position(&self) -> Vec2 {
@@ -49,13 +49,13 @@ impl Asteroid {
     pub fn vertices(&self) -> (Vec2, Vec2, Vec2, Vec2, Vec2, Vec2) {
         let rotation = self.rotation_matrix();
 
-        let vertex1 = (rotation * Self::VERTEX1) + self.kinematic.position;    
+        let vertex1 = (rotation * Self::VERTEX1) + self.kinematic.position;
         let vertex2 = (rotation * Self::VERTEX2) + self.kinematic.position;
         let vertex3 = (rotation * Self::VERTEX3) + self.kinematic.position;
         let vertex4 = (rotation * Self::VERTEX4) + self.kinematic.position;
         let vertex5 = (rotation * Self::VERTEX5) + self.kinematic.position;
         let vertex6 = (rotation * Self::VERTEX6) + self.kinematic.position;
-        
+
         return (vertex1, vertex2, vertex3, vertex4, vertex5, vertex6);
     }
 }
