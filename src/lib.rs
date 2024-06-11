@@ -7,20 +7,16 @@ pub use crate::{asteroid::*, bullet::*, kinematic::*, player::*};
 use macroquad::prelude::*;
 
 pub trait RotationMatrix {
-    fn angle(&self) -> f32;
+    fn rotation_matrix(&self) -> Mat2;
+}
+impl RotationMatrix for f32 {
     fn rotation_matrix(&self) -> Mat2 {
-        let angle = self.angle();
-        let sin = angle.sin();
-        let cos = angle.cos();
+        let sin = self.sin();
+        let cos = self.cos();
         return mat2(
             vec2(-sin, cos), //
             vec2(cos, sin),
         );
-    }
-}
-impl RotationMatrix for f32 {
-    fn angle(&self) -> f32 {
-        return *self;
     }
 }
 
