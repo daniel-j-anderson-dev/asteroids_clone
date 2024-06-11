@@ -84,7 +84,7 @@ impl Player {
         }
         if is_key_down(KeyCode::Up) {
             let rotation = self.orientation.rotation_matrix();
-            let forward = rotation * Self::FRONT_OFFSET.normalize();
+            let forward = rotation * Vec2::Y;
             let thrust = forward * Self::THRUSTER_ACCELERATION;
 
             self.kinematic.acceleration += (thrust - self.kinematic.acceleration) * 0.1;
