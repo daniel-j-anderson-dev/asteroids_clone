@@ -1,5 +1,5 @@
 use asteroids::*;
-use macroquad::prelude::*;
+use macroquad::{prelude::*, rand};
 
 fn settings() -> Conf {
     return Conf {
@@ -13,8 +13,15 @@ fn settings() -> Conf {
     };
 }
 
+fn initialize_rng() {
+    const RNG_SEED: u64 = 74386193;
+    rand::srand(RNG_SEED);
+}
+
 #[macroquad::main(settings)]
 async fn main() {
+    initialize_rng();
+
     let mut player = Player::default();
 
     loop {

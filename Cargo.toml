@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.4.8"
-rand = "0.8.5"
 
 [dev-dependencies]
 axum = { version = "0.7.5", features = ["macros"] }
