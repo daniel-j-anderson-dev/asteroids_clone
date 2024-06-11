@@ -5,11 +5,9 @@
 //! - add those rotated vertexes to the position of the hexagon
 //! - draw a line between each vertex
 
-use crate::{Kinematic, Player, RotationMatrix};
+use crate::{Kinematic, Player, RotationMatrix, FRAC_SQRT3_2};
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::TAU;
-
-const FRAC_SQRT3_2: f32 = 0.86602540378443864676372317075294;
 
 pub struct Asteroid {
     kinematic: Kinematic,

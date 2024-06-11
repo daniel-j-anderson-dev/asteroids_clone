@@ -6,6 +6,8 @@ pub mod player;
 pub use crate::{asteroid::*, bullet::*, kinematic::*, player::*};
 use macroquad::prelude::*;
 
+const FRAC_SQRT3_2: f32 = 0.86602540378443864676372317075294;
+
 pub trait RotationMatrix {
     fn rotation_matrix(&self) -> Mat2;
 }
