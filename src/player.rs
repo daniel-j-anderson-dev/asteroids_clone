@@ -68,7 +68,7 @@ impl Player {
 
         self.kinematic.cap_speed(Self::MAX_SPEED);
         self.kinematic.step_friction();
-        // self.kinematic.keep_on_screen();
+        self.kinematic.keep_on_screen();
         self.kinematic.step_motion();
     }
     pub fn draw(&self) {
