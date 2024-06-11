@@ -5,8 +5,9 @@
 //! - add those rotated vertexes to the position of the hexagon
 //! - draw a line between each vertex
 
-use crate::{Kinematic, RotationMatrix};
-use macroquad::prelude::*;
+use crate::{Kinematic, Player, RotationMatrix};
+use macroquad::{prelude::*, rand::gen_range};
+use std::f32::consts::TAU;
 
 pub struct Asteroid {
     kinematic: Kinematic,
@@ -25,31 +26,33 @@ impl Asteroid {
     const VERTEX5: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);
     const VERTEX6: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, 0.0);
 
-    const MAX_SPEED: f32 = 0.0;
+    pub const MIN_SPEED: f32 = 1.0;
+    pub const MAX_SPEED: f32 = Player::MAX_SPEED;
 }
 impl Asteroid {
     pub fn position(&self) -> Vec2 {
-        return self.kinematic.position;
+        return self.kinematic.position();
     }
     pub fn velocity(&self) -> Vec2 {
-        return self.kinematic.velocity;
+        return self.kinematic.velocity();
     }
     pub fn acceleration(&self) -> Vec2 {
-        return self.kinematic.acceleration;
+        return self.kinematic.acceleration();
     }
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
     pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
+        let position = self.kinematic.position();
 
         let vertices = [
-            (rotation * Self::VERTEX1) + self.kinematic.position,
-            (rotation * Self::VERTEX2) + self.kinematic.position,
-            (rotation * Self::VERTEX3) + self.kinematic.position,
-            (rotation * Self::VERTEX4) + self.kinematic.position,
-            (rotation * Self::VERTEX5) + self.kinematic.position,
-            (rotation * Self::VERTEX6) + self.kinematic.position,
+            (rotation * Self::VERTEX1) + position,
+            (rotation * Self::VERTEX2) + position,
+            (rotation * Self::VERTEX3) + position,
+            (rotation * Self::VERTEX4) + position,
+            (rotation * Self::VERTEX5) + position,
+            (rotation * Self::VERTEX6) + position,
         ];
 
         return vertices;
@@ -58,7 +61,7 @@ impl Asteroid {
     /// <img src="https://i.imgur.com/sI2p3qU.png">
     pub fn draw(&self) {
         let [v1, v2, v3, v4, v5, v6] = self.vertices();
-        
+
         draw_triangle(v1, v2, v3, WHITE);
         draw_triangle(v1, v6, v5, WHITE);
         draw_triangle(v3, v4, v5, WHITE);
