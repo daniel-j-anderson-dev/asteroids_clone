@@ -24,6 +24,33 @@ impl Kinematic {
     }
 }
 impl Kinematic {
+    pub fn lerp_acceleration(&mut self, acceleration: Vec2) {
+        self.acceleration = self.acceleration.lerp(acceleration, 0.1);
+    }
+    pub fn cap_speed(&mut self, max_speed: f32) {
+        if self.velocity.length() > max_speed {
+            self.velocity = self.velocity.normalize() * max_speed;
+        }
+    }
+    pub fn keep_on_screen(&mut self) {
+        // take a peek forward in time!
+        let next_position = self.position + self.velocity;
+
+        // next frame player will travel off the left side
+        if next_position.x < 0.0 {
+            // so lets teleport them to the right side
+            self.position.x = screen_width();
+        }
+        if next_position.x > screen_width() {
+            self.position.x = 0.0;
+        }
+        if next_position.y < 0.0 {
+            self.position.y = screen_height();
+        }
+        if next_position.y > screen_height() {
+            self.position.y = 0.0;
+        }
+    }
     pub fn step_motion(&mut self) {
         let p_0 = self.position.clone();
         let v_0 = self.velocity.clone();
