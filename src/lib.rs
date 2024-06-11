@@ -10,8 +10,9 @@ use macroquad::prelude::*;
 pub trait RotationMatrix {
     fn angle(&self) -> f32;
     fn rotation_matrix(&self) -> Mat2 {
-        let sin = self.angle().sin();
-        let cos = self.angle().cos();
+        let angle = self.angle();
+        let sin = angle.sin();
+        let cos = angle.cos();
         return mat2(vec2(cos, sin), vec2(-sin, cos));
     }
 }
