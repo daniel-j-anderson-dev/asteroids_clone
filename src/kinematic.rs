@@ -1,9 +1,27 @@
 use macroquad::prelude::*;
 
 pub struct Kinematic {
-    pub position: Vec2,
-    pub velocity: Vec2,
-    pub acceleration: Vec2,
+    position: Vec2,
+    velocity: Vec2,
+    acceleration: Vec2,
+}
+impl Kinematic {
+    pub fn new(position: Vec2, velocity: Vec2, acceleration: Vec2) -> Self {
+        return Self {
+            position,
+            velocity,
+            acceleration,
+        };
+    }
+    pub fn position(&self) -> Vec2 {
+        return self.position;
+    }
+    pub fn velocity(&self) -> Vec2 {
+        return self.velocity;
+    }
+    pub fn acceleration(&self) -> Vec2 {
+        return self.acceleration;
+    }
 }
 impl Kinematic {
     pub fn step_motion(&mut self) {
