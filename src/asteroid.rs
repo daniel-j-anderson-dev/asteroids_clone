@@ -28,11 +28,11 @@ impl Asteroid {
     pub const MIN_SPEED: f32 = 1.0;
     pub const MAX_SPEED: f32 = Player::MAX_SPEED / 8.0;
 
-    pub const MIN_ROTATION_SPEED: f32 = Player::ROTATION_DELTA;
-    pub const MAX_ROTATION_SPEED: f32 = Player::ROTATION_DELTA * 4.0;
+    pub const MIN_ROTATION_SPEED: f32 = Player::ROTATION_DELTA / 4.0;
+    pub const MAX_ROTATION_SPEED: f32 = Player::ROTATION_DELTA / 2.0;
 
     pub const MIN_SIZE: f32 = Player::SIZE / 2.0;
-    pub const MAX_SIZE: f32 = Player::SIZE * 2.0;
+    pub const MAX_SIZE: f32 = Player::SIZE;
 }
 impl Asteroid {
     pub fn random() -> Self {
@@ -82,7 +82,7 @@ impl Asteroid {
 impl Asteroid {
     pub fn update(&mut self) {
         self.rotate();
-        // self.kinematic.keep_on_screen();
+        self.kinematic.keep_on_screen();
         self.kinematic.step_motion();
     }
     pub fn rotate(&mut self) {
