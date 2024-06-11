@@ -1,6 +1,5 @@
+use crate::{screen_origin, kinematic::Kinematic, RotationMatrix};
 use std::f32::consts::TAU;
-
-use super::*;
 use macroquad::prelude::*;
 
 pub struct Player {
@@ -46,15 +45,8 @@ impl Player {
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
-    pub fn rotation_matrix(&self) -> Mat2 {
-        return mat2(
-            //     top row                  bottom row
-            vec2(self.orientation.cos(), self.orientation.sin()), // left column
-            vec2(-self.orientation.sin(), self.orientation.cos()), // right column
-        );
-    }
     pub fn vertices(&self) -> (Vec2, Vec2, Vec2) {
-        let rotation = self.rotation_matrix();
+        let rotation = self.orientation.rotation_matrix();
 
         let front = (rotation * Self::FRONT_OFFSET) + self.kinematic.position;
         let left = (rotation * Self::LEFT_OFFSET) + self.kinematic.position;
@@ -91,11 +83,7 @@ impl Player {
             self.orientation = (self.orientation + Self::ROTATION_DELTA) % TAU;
         }
         if is_key_down(KeyCode::Up) {
-            // let (front, _, _) = self.vertices();
-            // let forward = (front - self.kinematic.position).normalize();
-            // let thrust = forward * Self::THRUSTER_ACCELERATION;
-
-            let rotation = self.rotation_matrix();
+            let rotation = self.orientation.rotation_matrix();
             let forward = rotation * Self::FRONT_OFFSET.normalize();
             let thrust = forward * Self::THRUSTER_ACCELERATION;
 

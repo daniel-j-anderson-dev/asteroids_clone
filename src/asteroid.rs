@@ -5,7 +5,7 @@
 //! - add those rotated vertexes to the position of the hexagon
 //! - draw a line between each vertex
 
-use crate::Kinematic;
+use crate::{Kinematic, RotationMatrix};
 use macroquad::prelude::*;
 
 pub struct Asteroid {
@@ -39,15 +39,8 @@ impl Asteroid {
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
-    pub fn rotation_matrix(&self) -> Mat2 {
-        return mat2(
-            //     top row                  bottom row
-            vec2(self.orientation.cos(), self.orientation.sin()), // left column
-            vec2(-self.orientation.sin(), self.orientation.cos()), // right column
-        );
-    }
     pub fn vertices(&self) -> (Vec2, Vec2, Vec2, Vec2, Vec2, Vec2) {
-        let rotation = self.rotation_matrix();
+        let rotation = self.orientation.rotation_matrix();
 
         let vertex1 = (rotation * Self::VERTEX1) + self.kinematic.position;
         let vertex2 = (rotation * Self::VERTEX2) + self.kinematic.position;
