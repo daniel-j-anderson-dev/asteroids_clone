@@ -46,7 +46,7 @@ impl Asteroid {
             vec2(-self.orientation.sin(), self.orientation.cos()), // right column
         );
     }
-    pub fn verticies(&self) -> (Vec2, Vec2, Vec2, Vec2, Vec2, Vec2) {
+    pub fn vertices(&self) -> (Vec2, Vec2, Vec2, Vec2, Vec2, Vec2) {
         let rotation = self.rotation_matrix();
 
         let vertex_one = (rotation * Self::VERTEX_ONE) + self.kinematic.position;    
