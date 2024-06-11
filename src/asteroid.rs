@@ -71,8 +71,6 @@ impl Asteroid {
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
-}
-impl Asteroid {
     pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
         let position = self.kinematic.position();
@@ -80,6 +78,16 @@ impl Asteroid {
         let vertices = Self::VERTICES.map(|vertex| (rotation * (vertex * self.size)) + position);
 
         return vertices;
+    }
+}
+impl Asteroid {
+    pub fn update(&mut self) {
+        self.rotate();
+        // self.kinematic.keep_on_screen();
+        self.kinematic.step_motion();
+    }
+    pub fn rotate(&mut self) {
+        self.orientation += self.rotation_speed;
     }
     /// # Example
     /// <img src="https://i.imgur.com/sI2p3qU.png">
