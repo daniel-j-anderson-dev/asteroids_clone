@@ -74,8 +74,9 @@ impl Asteroid {
     pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
         let position = self.kinematic.position();
+        let scale = self.size;
 
-        let vertices = Self::VERTICES.map(|vertex| (rotation * (vertex * self.size)) + position);
+        let vertices = Self::VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
 
         return vertices;
     }
