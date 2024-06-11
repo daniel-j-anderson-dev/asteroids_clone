@@ -30,6 +30,23 @@ impl Asteroid {
     pub const MAX_SPEED: f32 = Player::MAX_SPEED;
 }
 impl Asteroid {
+    pub fn random() -> Self {
+        let position = vec2(
+            gen_range(0.0, screen_width()),
+            gen_range(0.0, screen_height()),
+        );
+
+        let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
+        let forward = gen_range(0.0, TAU).rotation_matrix() * Vec2::Y;
+        let velocity = speed * forward;
+
+        let orientation = gen_range(0.0, TAU);
+
+        return Self {
+            kinematic: Kinematic::new(position, velocity, Vec2::ZERO),
+            orientation,
+        };
+    }
     pub fn position(&self) -> Vec2 {
         return self.kinematic.position();
     }
