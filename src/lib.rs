@@ -4,7 +4,6 @@ pub mod kinematic;
 pub mod player;
 
 pub use crate::{asteroid::*, bullet::*, kinematic::*, player::*};
-use core::borrow::Borrow;
 use macroquad::prelude::*;
 
 pub trait RotationMatrix {
@@ -16,9 +15,9 @@ pub trait RotationMatrix {
         return mat2(vec2(cos, sin), vec2(-sin, cos));
     }
 }
-impl<T: Borrow<f32>> RotationMatrix for T {
+impl RotationMatrix for f32 {
     fn angle(&self) -> f32 {
-        return *self.borrow();
+        return *self;
     }
 }
 
