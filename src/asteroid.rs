@@ -51,4 +51,7 @@ impl Asteroid {
 
         return (vertex1, vertex2, vertex3, vertex4, vertex5, vertex6);
     }
+    pub fn draw(&self) {
+        
+    }
 }
