@@ -24,6 +24,8 @@ impl Asteroid {
     const VERTEX4: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);
     const VERTEX5: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);
     const VERTEX6: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, 0.0);
+
+    const MAX_SPEED: f32 = 0.0;
 }
 impl Asteroid {
     pub fn position(&self) -> Vec2 {
