@@ -19,12 +19,12 @@ impl Asteroid {
     const TRIANGLE_SIZE: f32 = Self::SIZE / 2.0;
     const HALF_TRIANGLE_SIZE: f32 = Self::TRIANGLE_SIZE / 2.0;
 
-    const VERTEX_ONE: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);
-    const VERTEX_TWO: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);        
-    const VERTEX_THREE: Vec2 = vec2(Self::TRIANGLE_SIZE, 0.0);    
-    const VERTEX_FOUR: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);    
-    const VERTEX_FIVE: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);    
-    const VERTEX_SIX: Vec2 = vec2(-Self::TRIANGLE_SIZE / 2.0, 0.0);    
+    const VERTEX1: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);
+    const VERTEX2: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, Self::TRIANGLE_SIZE);        
+    const VERTEX3: Vec2 = vec2(Self::TRIANGLE_SIZE, 0.0);    
+    const VERTEX4: Vec2 = vec2(Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);    
+    const VERTEX5: Vec2 = vec2(-Self::HALF_TRIANGLE_SIZE, -Self::TRIANGLE_SIZE);    
+    const VERTEX6: Vec2 = vec2(-Self::TRIANGLE_SIZE / 2.0, 0.0);    
 }
 impl Asteroid {
     pub fn position(&self) -> Vec2 {
@@ -49,13 +49,13 @@ impl Asteroid {
     pub fn vertices(&self) -> (Vec2, Vec2, Vec2, Vec2, Vec2, Vec2) {
         let rotation = self.rotation_matrix();
 
-        let vertex_one = (rotation * Self::VERTEX_ONE) + self.kinematic.position;    
-        let vertex_two = (rotation * Self::VERTEX_TWO) + self.kinematic.position;
-        let vertex_three = (rotation * Self::VERTEX_THREE) + self.kinematic.position;
-        let vertex_four = (rotation * Self::VERTEX_FOUR) + self.kinematic.position;
-        let vertex_five = (rotation * Self::VERTEX_FIVE) + self.kinematic.position;
-        let vertex_six = (rotation * Self::VERTEX_SIX) + self.kinematic.position;
+        let vertex1 = (rotation * Self::VERTEX1) + self.kinematic.position;    
+        let vertex2 = (rotation * Self::VERTEX2) + self.kinematic.position;
+        let vertex3 = (rotation * Self::VERTEX3) + self.kinematic.position;
+        let vertex4 = (rotation * Self::VERTEX4) + self.kinematic.position;
+        let vertex5 = (rotation * Self::VERTEX5) + self.kinematic.position;
+        let vertex6 = (rotation * Self::VERTEX6) + self.kinematic.position;
         
-        return (vertex_one, vertex_two, vertex_three, vertex_four, vertex_five, vertex_six);
+        return (vertex1, vertex2, vertex3, vertex4, vertex5, vertex6);
     }
 }
