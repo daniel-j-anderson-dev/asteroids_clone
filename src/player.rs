@@ -1,11 +1,10 @@
-use crate::{kinematic::Kinematic, screen_origin, Draw, RotationMatrix};
+use crate::{kinematic::Kinematic, screen_origin, Draw, KinematicGetters, RotationMatrix};
 use macroquad::prelude::*;
 use std::f32::consts::TAU;
 
 pub struct Player {
     pub kinematic: Kinematic,
     pub lives: usize,
-    /// An angle in radians clockwise from the positive x-axis
     pub orientation: f32,
 }
 impl Player {
@@ -15,6 +14,9 @@ impl Player {
     pub const THRUST_ACCELERATION: f32 = 0.2;
 
     pub const MAX_SPEED: f32 = Self::SIZE * 2.0;
+
+    /// Normalized front vertex before rotation and translation
+    pub const FORWARD: Vec2 = Vec2::Y;
 
     pub const VERTICES: [Vec2; 3] = [
         vec2(0.0, Self::SIZE),
@@ -30,15 +32,6 @@ impl Player {
             orientation: 0.0,
         };
     }
-    pub fn position(&self) -> Vec2 {
-        return self.kinematic.position();
-    }
-    pub fn velocity(&self) -> Vec2 {
-        return self.kinematic.velocity();
-    }
-    pub fn acceleration(&self) -> Vec2 {
-        return self.kinematic.acceleration();
-    }
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
@@ -51,6 +44,11 @@ impl Player {
         return vertices;
     }
 }
+impl KinematicGetters for Player {
+    fn kinematic(&self) -> &Kinematic {
+        return &self.kinematic;
+    }
+}
 impl Player {
     pub fn handle_input(&mut self) {
         if is_key_down(KeyCode::Left) {
@@ -61,7 +59,7 @@ impl Player {
         }
         if is_key_down(KeyCode::Up) {
             let rotation = self.orientation.rotation_matrix();
-            let forward = rotation * Vec2::Y;
+            let forward = rotation * Self::FORWARD;
             let thrust = forward * Self::THRUST_ACCELERATION;
             self.kinematic.lerp_acceleration(thrust)
         }

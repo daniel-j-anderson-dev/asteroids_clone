@@ -5,7 +5,7 @@
 //! - add those rotated vertexes to the position of the hexagon
 //! - draw a line between each vertex
 
-use crate::{Draw, Kinematic, Player, RotationMatrix, FRAC_SQRT3_2};
+use crate::{Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2};
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::TAU;
 
@@ -44,7 +44,7 @@ impl Asteroid {
         );
 
         let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
-        let forward = gen_range(0.0, TAU).rotation_matrix() * Vec2::Y;
+        let forward = gen_range(0.0, TAU).rotation_matrix() * Player::FORWARD;
         let velocity = speed * forward;
 
         let orientation = gen_range(0.0, TAU);
@@ -57,15 +57,6 @@ impl Asteroid {
             rotation_speed,
         };
     }
-    pub fn position(&self) -> Vec2 {
-        return self.kinematic.position();
-    }
-    pub fn velocity(&self) -> Vec2 {
-        return self.kinematic.velocity();
-    }
-    pub fn acceleration(&self) -> Vec2 {
-        return self.kinematic.acceleration();
-    }
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
@@ -77,6 +68,11 @@ impl Asteroid {
         let vertices = Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
 
         return vertices;
+    }
+}
+impl KinematicGetters for Asteroid {
+    fn kinematic(&self) -> &Kinematic {
+        return &self.kinematic;
     }
 }
 impl Asteroid {
