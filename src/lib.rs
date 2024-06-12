@@ -16,8 +16,8 @@ impl RotationMatrix for f32 {
         let sin = self.sin();
         let cos = self.cos();
         return mat2(
-            vec2(-sin, cos), //
-            vec2(cos, sin),
+            vec2(cos, sin), //
+            vec2(-sin, cos),
         );
     }
 }
