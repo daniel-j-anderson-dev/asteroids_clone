@@ -1,4 +1,4 @@
-use crate::{kinematic::Kinematic, screen_origin, RotationMatrix};
+use crate::{kinematic::Kinematic, screen_origin, Draw, RotationMatrix};
 use macroquad::prelude::*;
 use std::f32::consts::TAU;
 
@@ -71,7 +71,9 @@ impl Player {
         self.kinematic.keep_on_screen();
         self.kinematic.step_motion();
     }
-    pub fn draw(&self) {
+}
+impl Draw for Player {
+    fn draw(&self) {
         let [v1, v2, v3] = self.vertices();
         draw_triangle(v1, v2, v3, WHITE);
         draw_circle(

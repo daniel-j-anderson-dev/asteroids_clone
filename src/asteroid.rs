@@ -5,7 +5,7 @@
 //! - add those rotated vertexes to the position of the hexagon
 //! - draw a line between each vertex
 
-use crate::{Kinematic, Player, RotationMatrix, FRAC_SQRT3_2};
+use crate::{Draw, Kinematic, Player, RotationMatrix, FRAC_SQRT3_2};
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::TAU;
 
@@ -88,9 +88,11 @@ impl Asteroid {
     pub fn rotate(&mut self) {
         self.orientation += self.rotation_speed;
     }
+}
+impl Draw for Asteroid {
     /// # Example
     /// <img src="https://i.imgur.com/sI2p3qU.png">
-    pub fn draw(&self) {
+    fn draw(&self) {
         let [v1, v2, v3, v4, v5, v6] = self.vertices();
 
         draw_triangle(v1, v2, v3, WHITE);
