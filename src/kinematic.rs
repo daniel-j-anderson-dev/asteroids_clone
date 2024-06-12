@@ -1,5 +1,20 @@
 use macroquad::prelude::*;
 
+use crate::RotationMatrix;
+
+pub trait KinematicGetters {
+    fn kinematic(&self) -> &Kinematic;
+    fn position(&self) -> Vec2 {
+        return self.kinematic().position;
+    }
+    fn velocity(&self) -> Vec2 {
+        return self.kinematic().velocity;
+    }
+    fn acceleration(&self) -> Vec2 {
+        return self.kinematic().acceleration;
+    }
+}
+
 pub struct Kinematic {
     position: Vec2,
     velocity: Vec2,
@@ -27,6 +42,7 @@ impl Kinematic {
     pub fn lerp_acceleration(&mut self, acceleration: Vec2) {
         self.acceleration = self.acceleration.lerp(acceleration, 0.1);
     }
+
     pub fn cap_speed(&mut self, max_speed: f32) {
         if self.velocity.length() > max_speed {
             self.velocity = self.velocity.normalize() * max_speed;
