@@ -6,16 +6,13 @@ fn settings() -> Conf {
         window_title: String::from("Asteroids Clone"),
         window_width: 800,
         window_height: 800,
-        high_dpi: true,
+        high_dpi: false,
         window_resizable: false,
         fullscreen: false,
-        ..Default::default()
+        sample_count: 0,
+        icon: None,
+        platform: Default::default(),
     };
-}
-
-fn initialize_rng() {
-    let current_time = macroquad::miniquad::date::now() as u64;
-    rand::srand(current_time);
 }
 
 #[macroquad::main(settings)]

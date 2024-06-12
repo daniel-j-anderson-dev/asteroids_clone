@@ -22,6 +22,11 @@ impl RotationMatrix for f32 {
     }
 }
 
+pub fn initialize_rng() {
+    let current_time = macroquad::miniquad::date::now() as u64;
+    rand::srand(current_time);
+}
+
 pub fn screen_dimensions() -> Vec2 {
     return vec2(screen_width(), screen_height());
 }
