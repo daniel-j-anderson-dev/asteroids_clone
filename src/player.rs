@@ -3,9 +3,9 @@ use macroquad::prelude::*;
 use std::f32::consts::TAU;
 
 pub struct Player {
-    pub kinematic: Kinematic,
-    pub lives: usize,
-    pub orientation: f32,
+    kinematic: Kinematic,
+    lives: usize,
+    orientation: f32,
 }
 impl Player {
     pub const SIZE: f32 = 20.0;
@@ -52,10 +52,10 @@ impl KinematicGetters for Player {
 impl Player {
     pub fn handle_input(&mut self) {
         if is_key_down(KeyCode::Left) {
-            self.orientation = (self.orientation - Self::ROTATION_DELTA) % TAU;
+            self.orientation -= Self::ROTATION_DELTA;
         }
         if is_key_down(KeyCode::Right) {
-            self.orientation = (self.orientation + Self::ROTATION_DELTA) % TAU;
+            self.orientation += Self::ROTATION_DELTA;
         }
         if is_key_down(KeyCode::Up) {
             let rotation = self.orientation.rotation_matrix();
@@ -64,10 +64,11 @@ impl Player {
             self.kinematic.lerp_acceleration(thrust)
         }
 
+        self.orientation %= TAU;
         self.kinematic.cap_speed(Self::MAX_SPEED);
-        self.kinematic.step_friction();
         self.kinematic.keep_on_screen();
         self.kinematic.step_motion();
+        self.kinematic.step_friction();
     }
 }
 impl Draw for Player {
