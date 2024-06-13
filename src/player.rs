@@ -19,9 +19,6 @@ impl Player {
 
     pub const MAX_SPEED: f32 = Self::SIZE * 2.0;
 
-    /// Normalized front vertex before rotation and translation
-    pub const FORWARD: Vec2 = Vec2::Y;
-
     pub const VERTICES: [Vec2; 3] = [
         vec2(0.0, Self::SIZE),
         vec2(-Self::SIZE / 2.5, Self::SIZE / -4.0),
@@ -45,7 +42,7 @@ impl Player {
     /// Returns vertices of player by calculating default vertices rotated by `self.orientation` then translated by `self.position`
     pub fn vertices(&self) -> [Vec2; 3] {
         let rotation = self.orientation.rotation_matrix();
-        let position = self.kinematic.position();
+        let position = self.position();
 
         let vertices = Self::VERTICES.map(|vertex| (rotation * vertex) + position);
 
