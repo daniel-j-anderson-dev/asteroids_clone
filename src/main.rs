@@ -1,5 +1,5 @@
 use asteroids::*;
-use macroquad::{prelude::*, rand};
+use macroquad::prelude::*;
 
 fn settings() -> Conf {
     return Conf {
@@ -9,7 +9,7 @@ fn settings() -> Conf {
         high_dpi: false,
         window_resizable: false,
         fullscreen: false,
-        sample_count: 10,
+        sample_count: 100,
         icon: None,
         platform: Default::default(),
     };
