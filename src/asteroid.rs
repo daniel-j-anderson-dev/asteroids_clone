@@ -6,7 +6,7 @@
 //! - draw a line between each vertex
 
 use crate::{
-    rock_texture, Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2,
+    polar_vec2, rock_texture, Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2
 };
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::{FRAC_PI_2, TAU};
@@ -47,8 +47,8 @@ impl Asteroid {
         );
 
         let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
-        let forward = gen_range(0.0, TAU).rotation_matrix() * Player::FORWARD;
-        let velocity = speed * forward;
+        let angle = gen_range(0.0, TAU);
+        let velocity = polar_vec2(speed, angle);
 
         let orientation = gen_range(0.0, TAU);
         let rotation_speed = gen_range(Self::MIN_ROTATION_SPEED, Self::MAX_ROTATION_SPEED);
@@ -66,7 +66,7 @@ impl Asteroid {
     }
     pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
-        let position = self.kinematic.position();
+        let position = self.position();
         let scale = self.size;
 
         return Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
