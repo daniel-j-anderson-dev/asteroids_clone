@@ -5,33 +5,33 @@
 //! - travels in the direction of the player
 //! - disappears after n frames
 
-use macroquad::prelude::*;
-use crate::{Draw, Player, KinematicGetters};
 use crate::Kinematic;
+use crate::{Draw, KinematicGetters, Player};
+use macroquad::prelude::*;
 pub struct Bullet {
     kinematic: Kinematic,
     size: f32,
 }
 impl Bullet {
-    fn default() -> Self {
-        let player = Player::default();
-        return Bullet {
-            kinematic: Kinematic {
-                position: vec2(0.0, 0.0),
-                velocity: vec2(0.0, 0.0),
-                acceleration: vec2(0.0, 0.0),
-            },
-            size: 5.0,
-        }
-    }
+    // fn default() -> Self {
+    //     let player = Player::default();
+    //     return Bullet {
+    //         kinematic: Kinematic {
+    //             position: vec2(0.0, 0.0),
+    //             velocity: vec2(0.0, 0.0),
+    //             acceleration: vec2(0.0, 0.0),
+    //         },
+    //         size: 5.0,
+    //     }
+    // }
 }
 impl KinematicGetters for Bullet {
     fn kinematic(&self) -> &Kinematic {
         return &self.kinematic;
     }
 }
-impl Draw for Bullet {
-    fn draw(&self) {
-        draw_circle(x, y, 1.5, WHITE)
-    }
-}
+// impl Draw for Bullet {
+//     fn draw(&self) {
+//         draw_circle(x, y, 1.5, WHITE)
+//     }
+// }
