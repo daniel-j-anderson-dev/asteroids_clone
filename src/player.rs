@@ -1,5 +1,5 @@
 use crate::{
-    duck_texture, kinematic::Kinematic, screen_origin, Draw, KinematicGetters, RotationMatrix,
+    duck_texture, kinematic::Kinematic, polar_vec2, screen_origin, Draw, KinematicGetters, RotationMatrix
 };
 use macroquad::prelude::*;
 use std::f32::consts::TAU;
@@ -28,6 +28,7 @@ impl Player {
     ];
 }
 impl Player {
+    /// Create a stationary player at the screen's origin
     pub fn default() -> Player {
         return Player {
             kinematic: Kinematic::new(screen_origin(), Vec2::ZERO, Vec2::ZERO),
@@ -36,9 +37,11 @@ impl Player {
             texture: duck_texture(),
         };
     }
+    /// Getter for the player's orientation angle
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
+    /// Returns vertices of player by calculating default vertices rotated by `self.orientation` then translated by `self.position`
     pub fn vertices(&self) -> [Vec2; 3] {
         let rotation = self.orientation.rotation_matrix();
         let position = self.kinematic.position();
@@ -54,6 +57,12 @@ impl KinematicGetters for Player {
     }
 }
 impl Player {
+    /// - rotate
+    ///   - Left (counter-clockwise)
+    ///   - Right (clockwise)
+    ///   - -2pi <= 'self.orientation' <= 2pi
+    /// - accelerate player forward
+    ///   - Up
     pub fn handle_input(&mut self) {
         if is_key_down(KeyCode::Left) {
             self.orientation -= Self::ROTATION_DELTA;
@@ -61,14 +70,16 @@ impl Player {
         if is_key_down(KeyCode::Right) {
             self.orientation += Self::ROTATION_DELTA;
         }
+        self.orientation %= TAU;
+
         if is_key_down(KeyCode::Up) {
-            let rotation = self.orientation.rotation_matrix();
-            let forward = rotation * Self::FORWARD;
-            let thrust = forward * Self::THRUST_ACCELERATION;
+            let thrust = polar_vec2(Self::THRUST_ACCELERATION, self.orientation);
             self.kinematic.lerp_acceleration(thrust)
         }
-
-        self.orientation %= TAU;
+    }
+    /// Move one time step further in the player simulation
+    pub fn step(&mut self) {
+        self.handle_input();
         self.kinematic.cap_speed(Self::MAX_SPEED);
         self.kinematic.keep_on_screen();
         self.kinematic.step_motion();
