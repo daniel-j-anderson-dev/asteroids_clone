@@ -92,8 +92,8 @@ impl Draw for Asteroid {
         let [v1, v2, v3, v4, v5, v6] = self.vertices();
 
         draw_triangle(v1, v2, v3, WHITE);
+        draw_triangle(v1, v3, v5, WHITE);
         draw_triangle(v1, v6, v5, WHITE);
         draw_triangle(v3, v4, v5, WHITE);
-        draw_triangle(v1, v3, v5, WHITE);
     }
 }
