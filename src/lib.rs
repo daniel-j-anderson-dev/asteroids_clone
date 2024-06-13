@@ -11,7 +11,7 @@ const FRAC_SQRT3_2: f32 = 0.86602540378443864676372317075294;
 
 /// returns a rectangular Vec2 with the given `norm` and `angle`. `angle` is relative to the positive x axis
 pub fn polar_vec2(norm: f32, angle: f32) -> Vec2 {
-    return vec2(angle.cos(), angle.sin()) * norm
+    return vec2(angle.cos(), angle.sin()) * norm;
 }
 
 pub trait RotationMatrix {

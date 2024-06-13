@@ -1,5 +1,6 @@
 use crate::{
-    duck_texture, kinematic::Kinematic, polar_vec2, screen_origin, Draw, KinematicGetters, RotationMatrix
+    duck_texture, kinematic::Kinematic, polar_vec2, screen_origin, Draw, KinematicGetters,
+    RotationMatrix,
 };
 use macroquad::prelude::*;
 use std::f32::consts::{FRAC_PI_2, TAU};
