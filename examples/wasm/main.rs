@@ -31,8 +31,8 @@ async fn main() {
     let listener = TcpListener::bind("127.0.0.1:5000")
         .await
         .expect("failed to bind tcp listener");
-    let files = ServeDir::new("./examples/wasm/");
-    let routes = Router::new().nest_service("/", files);
+    let file_handler = ServeDir::new("./examples/wasm/");
+    let routes = Router::new().nest_service("/", file_handler);
     
     println!("hosting wasm on http://localhost:5000");
     axum::serve(listener, routes).await.expect("server error");
