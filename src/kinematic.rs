@@ -1,7 +1,5 @@
 use macroquad::prelude::*;
 
-use crate::RotationMatrix;
-
 pub trait KinematicGetters {
     fn kinematic(&self) -> &Kinematic;
     fn position(&self) -> Vec2 {
@@ -28,14 +26,10 @@ impl Kinematic {
             acceleration,
         };
     }
-    pub fn position(&self) -> Vec2 {
-        return self.position;
-    }
-    pub fn velocity(&self) -> Vec2 {
-        return self.velocity;
-    }
-    pub fn acceleration(&self) -> Vec2 {
-        return self.acceleration;
+}
+impl KinematicGetters for Kinematic {
+    fn kinematic(&self) -> &Kinematic {
+        return self;
     }
 }
 impl Kinematic {
