@@ -5,7 +5,9 @@
 //! - add those rotated vertexes to the position of the hexagon
 //! - draw a line between each vertex
 
-use crate::{Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2};
+use crate::{
+    rock_texture, Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2,
+};
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::TAU;
 
@@ -14,6 +16,7 @@ pub struct Asteroid {
     size: f32,
     orientation: f32,
     rotation_speed: f32,
+    texture: Texture2D,
 }
 impl Asteroid {
     pub const UNIT_VERTICES: [Vec2; 6] = [
@@ -55,6 +58,7 @@ impl Asteroid {
             size,
             orientation,
             rotation_speed,
+            texture: rock_texture(),
         };
     }
     pub fn orientation(&self) -> f32 {
@@ -76,6 +80,7 @@ impl KinematicGetters for Asteroid {
 impl Asteroid {
     pub fn update(&mut self) {
         self.rotate();
+        self.kinematic.cap_speed(Self::MAX_SPEED);
         self.kinematic.keep_on_screen();
         self.kinematic.step_motion();
     }
@@ -88,10 +93,26 @@ impl Draw for Asteroid {
     /// <img src="https://i.imgur.com/sI2p3qU.png">
     fn draw(&self) {
         let [v1, v2, v3, v4, v5, v6] = self.vertices();
-
         draw_triangle(v1, v2, v3, WHITE);
         draw_triangle(v1, v3, v5, WHITE);
         draw_triangle(v1, v6, v5, WHITE);
         draw_triangle(v3, v4, v5, WHITE);
+
+        let position = self.position();
+        let texture_scale = 1.4;
+        draw_texture_ex(
+            &self.texture,
+            position.x - (self.size * (texture_scale / 2.0)),
+            position.y - (self.size * (texture_scale / 2.0)),
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(Vec2::splat(self.size * texture_scale)),
+                source: None,
+                rotation: self.orientation,
+                flip_x: false,
+                flip_y: true,
+                pivot: None,
+            },
+        );
     }
 }

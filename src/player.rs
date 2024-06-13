@@ -1,4 +1,6 @@
-use crate::{kinematic::Kinematic, screen_origin, Draw, KinematicGetters, RotationMatrix};
+use crate::{
+    duck_texture, kinematic::Kinematic, screen_origin, Draw, KinematicGetters, RotationMatrix,
+};
 use macroquad::prelude::*;
 use std::f32::consts::TAU;
 
@@ -6,6 +8,7 @@ pub struct Player {
     kinematic: Kinematic,
     lives: usize,
     orientation: f32,
+    texture: Texture2D,
 }
 impl Player {
     pub const SIZE: f32 = 20.0;
@@ -30,6 +33,7 @@ impl Player {
             kinematic: Kinematic::new(screen_origin(), Vec2::ZERO, Vec2::ZERO),
             lives: 3,
             orientation: 0.0,
+            texture: duck_texture(),
         };
     }
     pub fn orientation(&self) -> f32 {
@@ -73,13 +77,25 @@ impl Player {
 }
 impl Draw for Player {
     fn draw(&self) {
+        let pos = self.position();
+
         let [v1, v2, v3] = self.vertices();
         draw_triangle(v1, v2, v3, WHITE);
-        draw_circle(
-            self.kinematic.position().x,
-            self.kinematic.position().y,
-            2.5,
-            RED,
+        draw_circle(pos.x, pos.y, 2.5, RED);
+
+        draw_texture_ex(
+            &self.texture,
+            pos.x - (Self::SIZE / 2.0),
+            pos.y - (Self::SIZE / 2.0),
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(Vec2::splat(Self::SIZE)),
+                source: None,
+                rotation: self.orientation,
+                flip_x: false,
+                flip_y: true,
+                pivot: None,
+            },
         );
     }
 }
