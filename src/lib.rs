@@ -2,8 +2,9 @@ pub mod asteroid;
 pub mod bullet;
 pub mod kinematic;
 pub mod player;
+pub mod assets;
 
-pub use crate::{asteroid::*, bullet::*, kinematic::*, player::*};
+pub use crate::{asteroid::*, bullet::*, kinematic::*, player::*, assets::*};
 use macroquad::prelude::*;
 
 const FRAC_SQRT3_2: f32 = 0.86602540378443864676372317075294;
