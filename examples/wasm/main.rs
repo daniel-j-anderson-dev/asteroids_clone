@@ -26,7 +26,7 @@ async fn main() {
     )
     .expect("Failed to copy wasm binary to example folder");
 
-    println!("wasm binary is in built and in place\nstarting server...");
+    println!("wasm binary is built and in place\nstarting server...");
 
     let listener = TcpListener::bind("127.0.0.1:5000")
         .await
