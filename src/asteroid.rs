@@ -9,7 +9,7 @@ use crate::{
     rock_texture, Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2,
 };
 use macroquad::{prelude::*, rand::gen_range};
-use std::f32::consts::TAU;
+use std::f32::consts::{FRAC_PI_2, TAU};
 
 pub struct Asteroid {
     kinematic: Kinematic,
@@ -78,7 +78,7 @@ impl KinematicGetters for Asteroid {
     }
 }
 impl Asteroid {
-    pub fn update(&mut self) {
+    pub fn step(&mut self) {
         self.rotate();
         self.kinematic.cap_speed(Self::MAX_SPEED);
         self.kinematic.keep_on_screen();
@@ -108,7 +108,7 @@ impl Draw for Asteroid {
             DrawTextureParams {
                 dest_size: Some(Vec2::splat(self.size * texture_scale)),
                 source: None,
-                rotation: self.orientation,
+                rotation: self.orientation - FRAC_PI_2,
                 flip_x: false,
                 flip_y: true,
                 pivot: None,

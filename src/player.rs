@@ -2,7 +2,7 @@ use crate::{
     duck_texture, kinematic::Kinematic, polar_vec2, screen_origin, Draw, KinematicGetters, RotationMatrix
 };
 use macroquad::prelude::*;
-use std::f32::consts::TAU;
+use std::f32::consts::{FRAC_PI_2, TAU};
 
 pub struct Player {
     kinematic: Kinematic,
@@ -102,7 +102,7 @@ impl Draw for Player {
             DrawTextureParams {
                 dest_size: Some(Vec2::splat(Self::SIZE)),
                 source: None,
-                rotation: self.orientation,
+                rotation: self.orientation - FRAC_PI_2,
                 flip_x: false,
                 flip_y: true,
                 pivot: None,
