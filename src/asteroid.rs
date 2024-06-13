@@ -65,9 +65,7 @@ impl Asteroid {
         let position = self.kinematic.position();
         let scale = self.size;
 
-        let vertices = Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
-
-        return vertices;
+        return Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
     }
 }
 impl KinematicGetters for Asteroid {
