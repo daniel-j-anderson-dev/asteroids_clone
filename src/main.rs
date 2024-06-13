@@ -32,8 +32,8 @@ async fn main() {
         player.draw();
         asteroid.draw();
 
-        player.handle_input();
-        asteroid.update();
+        player.step();
+        asteroid.step();
 
         next_frame().await;
     }
