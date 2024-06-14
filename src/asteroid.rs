@@ -6,7 +6,8 @@
 //! - draw a line between each vertex
 
 use crate::{
-    polar_vec2, rock_texture, Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2
+    polar_vec2, rock_texture, Draw, Kinematic, KinematicGetters, Player, RotationMatrix,
+    FRAC_SQRT3_2,
 };
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::{FRAC_PI_2, TAU};
@@ -16,7 +17,6 @@ pub struct Asteroid {
     size: f32,
     orientation: f32,
     rotation_speed: f32,
-    texture: Texture2D,
 }
 impl Asteroid {
     pub const UNIT_VERTICES: [Vec2; 6] = [
@@ -58,7 +58,6 @@ impl Asteroid {
             size,
             orientation,
             rotation_speed,
-            texture: rock_texture(),
         };
     }
     pub fn orientation(&self) -> f32 {
@@ -100,10 +99,11 @@ impl Draw for Asteroid {
 
         let position = self.position();
         let texture_scale = 1.4;
+        let texture_offset = self.size * (texture_scale / 2.0);
         draw_texture_ex(
-            &self.texture,
-            position.x - (self.size * (texture_scale / 2.0)),
-            position.y - (self.size * (texture_scale / 2.0)),
+            rock_texture(),
+            position.x - texture_offset,
+            position.y - texture_offset,
             WHITE,
             DrawTextureParams {
                 dest_size: Some(Vec2::splat(self.size * texture_scale)),

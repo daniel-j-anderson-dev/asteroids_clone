@@ -9,7 +9,6 @@ pub struct Player {
     kinematic: Kinematic,
     lives: usize,
     orientation: f32,
-    texture: Texture2D,
 }
 impl Player {
     pub const SIZE: f32 = 20.0;
@@ -32,7 +31,6 @@ impl Player {
             kinematic: Kinematic::new(screen_origin(), Vec2::ZERO, Vec2::ZERO),
             lives: 3,
             orientation: 0.0,
-            texture: duck_texture(),
         };
     }
     /// Getter for the player's orientation angle
@@ -93,7 +91,7 @@ impl Draw for Player {
         draw_circle(pos.x, pos.y, 2.5, RED);
 
         draw_texture_ex(
-            &self.texture,
+            duck_texture(),
             pos.x - (Self::SIZE / 2.0),
             pos.y - (Self::SIZE / 2.0),
             WHITE,
