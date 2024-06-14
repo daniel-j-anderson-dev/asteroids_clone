@@ -88,7 +88,7 @@ impl Draw for Player {
         let [v1, v2, v3] = self.vertices();
         draw_triangle(v1, v2, v3, WHITE);
         draw_circle(position.x, position.y, 2.5, RED);
-        
+
         const TEXTURE_OFFSET: f32 = Player::SIZE / 2.0;
         let texture_position = position - TEXTURE_OFFSET;
         draw_texture_ex(

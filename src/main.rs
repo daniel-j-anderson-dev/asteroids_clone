@@ -22,6 +22,7 @@ async fn main() {
     let mut player = Player::default();
     let mut asteroid = Asteroid::random();
     let mut maybe_bullet = None;
+
     loop {
         clear_background(BLACK);
 
