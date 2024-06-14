@@ -97,13 +97,13 @@ impl Draw for Asteroid {
         draw_triangle(v1, v6, v5, WHITE);
         draw_triangle(v3, v4, v5, WHITE);
 
-        let position = self.position();
         let texture_scale = 1.4;
         let texture_offset = self.size * (texture_scale / 2.0);
+        let texture_position = self.position() - texture_offset;
         draw_texture_ex(
             rock_texture(),
-            position.x - texture_offset,
-            position.y - texture_offset,
+            texture_position.x,
+            texture_position.y,
             WHITE,
             DrawTextureParams {
                 dest_size: Some(Vec2::splat(self.size * texture_scale)),

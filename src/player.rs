@@ -84,16 +84,17 @@ impl Player {
 }
 impl Draw for Player {
     fn draw(&self) {
-        let pos = self.position();
-
+        let position = self.position();
         let [v1, v2, v3] = self.vertices();
         draw_triangle(v1, v2, v3, WHITE);
-        draw_circle(pos.x, pos.y, 2.5, RED);
-
+        draw_circle(position.x, position.y, 2.5, RED);
+        
+        const TEXTURE_OFFSET: f32 = Player::SIZE / 2.0;
+        let texture_position = position - TEXTURE_OFFSET;
         draw_texture_ex(
             duck_texture(),
-            pos.x - (Self::SIZE / 2.0),
-            pos.y - (Self::SIZE / 2.0),
+            texture_position.x,
+            texture_position.y,
             WHITE,
             DrawTextureParams {
                 dest_size: Some(Vec2::splat(Self::SIZE)),
