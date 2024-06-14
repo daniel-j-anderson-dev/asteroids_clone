@@ -17,10 +17,10 @@ impl Bullet {
 
     pub fn new(player_front: Vec2, angle: f32) -> Self {
         let velocity = polar_vec2(Self::SPEED, angle);
-        
+
         return Bullet {
             kinematic: Kinematic::new(player_front, velocity, Vec2::ZERO),
-        }; 
+        };
     }
     pub fn step(&mut self) {
         self.kinematic.step_motion();
