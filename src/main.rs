@@ -21,7 +21,7 @@ async fn main() {
 
     let mut player = Player::default();
     let mut asteroid = Asteroid::random();
-    let mut maybe_bullet = None;
+    let mut bullets: Vec<Bullet> = Vec::new();
 
     loop {
         clear_background(BLACK);
@@ -31,20 +31,23 @@ async fn main() {
         }
 
         if is_key_pressed(KeyCode::Z) {
-            maybe_bullet = Some(Bullet::from(&player));
+            // Spawn bullet
+            bullets.push(Bullet::new(player.vertices()[0], player.orientation()));
         }
+
+        
 
         player.draw();
         asteroid.draw();
-        if let Some(bullet) = &maybe_bullet {
-            bullet.draw();
-        }
+        // for mut bullet in &mut bullets {
+        //     bullet.draw()
+        // }
 
         player.step();
         asteroid.step();
-        if let Some(bullet) = &maybe_bullet {
-            bullet.draw();
-        }
+        // for mut bullet in &mut [bullets] {
+        //     bullet.step()
+        // }
 
         next_frame().await;
     }

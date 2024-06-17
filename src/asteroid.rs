@@ -6,8 +6,7 @@
 //! - draw a line between each vertex
 
 use crate::{
-    polar_vec2, rock_texture, Draw, Kinematic, KinematicGetters, Player, RotationMatrix,
-    FRAC_SQRT3_2,
+    polar_vec2, rock_texture, Bullet, Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2
 };
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::{FRAC_PI_2, TAU};
@@ -69,6 +68,27 @@ impl Asteroid {
         let scale = self.size;
 
         return Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
+    }
+    pub fn split(self, bullet_velocity: Vec2) -> (Self, Self) {
+        let asteroid_velocity_1 = vec2(-bullet_velocity.y, bullet_velocity.x);
+        let asteroid_velocity_2 = -asteroid_velocity_1;
+        
+        let asteroid_1 = Asteroid {
+            kinematic: Kinematic::new(self.position(), asteroid_velocity_1, Vec2::ZERO,),
+            size: self.size / 2.0,
+            orientation: self.orientation,
+            rotation_speed: self.rotation_speed * (2.0 / 3.0),
+        };
+
+        let asteroid_2 = Asteroid {
+            kinematic: Kinematic::new(self.position(), asteroid_velocity_2, Vec2::ZERO,),
+            size: self.size / 2.0,
+            orientation: self.orientation,
+            rotation_speed: self.rotation_speed * (2.0 / 3.0),
+        };
+        
+
+       return (asteroid_1, asteroid_2);
     }
 }
 impl KinematicGetters for Asteroid {
