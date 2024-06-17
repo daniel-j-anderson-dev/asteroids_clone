@@ -30,7 +30,7 @@ async fn main() {
             asteroids = Asteroid::multiple_random(10);
         }
 
-        if is_key_down(KeyCode::Z) {
+        if is_key_pressed(KeyCode::Z) {
             bullets.push(Bullet::from(&player));
         }
 
