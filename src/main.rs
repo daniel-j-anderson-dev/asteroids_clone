@@ -20,34 +20,58 @@ async fn main() {
     initialize_rng();
 
     let mut player = Player::default();
-    let mut asteroid = Asteroid::random();
-    let mut bullets: Vec<Bullet> = Vec::new();
+    let mut asteroids = Asteroid::multiple_random(10);
+    let mut bullets = Bullet::many_new();
 
     loop {
         clear_background(BLACK);
 
         if is_key_pressed(KeyCode::Space) {
-            asteroid = Asteroid::random();
+            asteroids = Asteroid::multiple_random(10);
         }
 
-        if is_key_pressed(KeyCode::Z) {
-            // Spawn bullet
-            bullets.push(Bullet::new(player.vertices()[0], player.orientation()));
+        if is_key_down(KeyCode::Z) {
+            bullets.push(Bullet::from(&player));
         }
 
-        
+        bullets.retain(|b| b.is_alive());
+
+        // for every bullet on screen
+        'outer: for i in 0..bullets.len() {
+            // linear search for collisions with each asteroid
+            for j in 0..asteroids.len() {
+                // if the bullet is inside the asteroid (collision)
+                if is_point_in_hexagon(
+                    bullets[i].position(),
+                    asteroids[j].position(),
+                    asteroids[j].orientation(),
+                    asteroids[j].size(),
+                ) {
+                    // then remove that asteroid
+                    let parent = asteroids.remove(j);
+                    
+                    // split the parent apart
+                    let (child1, child2) = parent.split(bullets[i].velocity());
+                    
+                    // and destroy the bullet
+                    bullets.remove(i);
+
+                    // and add each child to the collection
+                    asteroids.push(child1);
+                    asteroids.push(child2);
+
+                    break 'outer;
+                }
+            }
+        }
 
         player.draw();
-        asteroid.draw();
-        // for mut bullet in &mut bullets {
-        //     bullet.draw()
-        // }
-
+        asteroids.iter().for_each(|a| a.draw());
+        bullets.iter().for_each(|b| b.draw());
+        
         player.step();
-        asteroid.step();
-        // for mut bullet in &mut [bullets] {
-        //     bullet.step()
-        // }
+        asteroids.iter_mut().for_each(|a| a.step());
+        bullets.iter_mut().for_each(|b| b.step());
 
         next_frame().await;
     }
