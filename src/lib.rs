@@ -9,6 +9,27 @@ use macroquad::prelude::*;
 
 const FRAC_SQRT3_2: f32 = 0.86602540378443864676372317075294;
 
+pub fn is_point_in_hexagon(point: Vec2, hexagon_center: Vec2, hexagon_orientation: f32, hexagon_size: f32) -> bool {
+    // Translate point to the hexagon's origin
+    let translated = vec2(point.x - hexagon_center.x, point.y - hexagon_center.y);
+
+    // Rotate the point by the negative of the hexagon’s angle
+    let cos = hexagon_orientation.cos();
+    let sin = hexagon_orientation.sin();
+    let rotated = vec2(
+        translated.x * cos + translated.y * sin,
+        -translated.x * sin + translated.y * cos,
+    );
+
+    let within_vertical_bounds = rotated.x.abs() <= hexagon_size;
+    let within_horizontal_bounds = rotated.y.abs() <= FRAC_SQRT3_2 * hexagon_size;
+    let within_diagonal_bounds = (rotated.y - FRAC_SQRT3_2 * rotated.y).abs()
+        <= FRAC_SQRT3_2 * hexagon_size
+        && (rotated.x + FRAC_SQRT3_2 * rotated.y).abs() <= FRAC_SQRT3_2 * hexagon_size;
+
+    return within_vertical_bounds && within_horizontal_bounds && within_diagonal_bounds;
+}
+
 /// returns a rectangular Vec2 with the given `norm` and `angle`. `angle` is relative to the positive x axis
 pub fn polar_vec2(norm: f32, angle: f32) -> Vec2 {
     return vec2(angle.cos(), angle.sin()) * norm;
