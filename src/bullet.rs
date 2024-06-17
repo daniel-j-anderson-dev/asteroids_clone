@@ -10,21 +10,32 @@ use crate::{Draw, KinematicGetters, Player};
 use macroquad::prelude::*;
 pub struct Bullet {
     kinematic: Kinematic,
+    frames_left: usize,
 }
 impl Bullet {
-    const SIZE: f32 = Player::SIZE / 10.0;
-    const SPEED: f32 = Player::MAX_SPEED / 4.0;
+    pub const SIZE: f32 = Player::SIZE / 10.0;
+    pub const SPEED: f32 = Player::MAX_SPEED / 4.0;
 
+    pub const FRAMES_ALIVE: usize = 60;
+
+    pub fn many_new() -> Vec<Self> {
+        return Vec::new();
+    }
     pub fn new(player_front: Vec2, angle: f32) -> Self {
         let velocity = polar_vec2(Self::SPEED, angle);
 
         return Bullet {
             kinematic: Kinematic::new(player_front, velocity, Vec2::ZERO),
+            frames_left: Self::FRAMES_ALIVE,
         };
+    }
+    pub fn is_alive(&self) -> bool {
+        return self.frames_left > 0;
     }
     pub fn step(&mut self) {
         self.kinematic.step_motion();
         self.kinematic.keep_on_screen();
+        self.frames_left = self.frames_left.saturating_sub(1);
     }
 }
 impl KinematicGetters for Bullet {
