@@ -28,15 +28,18 @@ impl Asteroid {
     ];
 
     pub const MIN_SPEED: f32 = 1.0;
-    pub const MAX_SPEED: f32 = Player::MAX_SPEED / 8.0;
+    pub const MAX_SPEED: f32 = Player::MAX_SPEED / 16.0;
 
     pub const MIN_ROTATION_SPEED: f32 = Player::ROTATION_DELTA / 4.0;
     pub const MAX_ROTATION_SPEED: f32 = Player::ROTATION_DELTA / 2.0;
 
-    pub const MIN_SIZE: f32 = Player::SIZE / 2.0;
-    pub const MAX_SIZE: f32 = Player::SIZE;
+    pub const MIN_SIZE: f32 = Player::SIZE;
+    pub const MAX_SIZE: f32 = Player::SIZE * 2.0;
 }
 impl Asteroid {
+    pub fn multiple_random(count: usize) -> Vec<Self> {
+        return (0..count).map(|_| Asteroid::random()).collect();
+    }
     pub fn random() -> Self {
         let size = gen_range(Self::MIN_SIZE, Self::MAX_SIZE);
 
@@ -58,6 +61,9 @@ impl Asteroid {
             orientation,
             rotation_speed,
         };
+    }
+    pub fn size(&self) -> f32 {
+        return self.size;
     }
     pub fn orientation(&self) -> f32 {
         return self.orientation;
