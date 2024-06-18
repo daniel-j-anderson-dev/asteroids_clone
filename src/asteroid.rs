@@ -37,7 +37,7 @@ impl Asteroid {
     pub const MAX_SIZE: f32 = Player::SIZE * 2.0;
 }
 impl Asteroid {
-    pub fn multiple_random(count: usize) -> Vec<Self> {
+    pub fn many_random(count: usize) -> Vec<Self> {
         return (0..count).map(|_| Asteroid::random()).collect();
     }
     pub fn random() -> Self {
