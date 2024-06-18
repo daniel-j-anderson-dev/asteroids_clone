@@ -99,7 +99,9 @@ impl Asteroid {
 
        return (asteroid_1, asteroid_2);
     }
-    /// The asteroid is "destroyed" when it is removed from the collection. The asteroid is dropped when .split is called
+    /// The asteroid is "destroyed" when it is removed from the collection.
+    /// The asteroid is dropped when .split is called.
+    /// See: [Asteroid::is_too_small]
     pub fn destroy(self) {
         if self.size > self.size / 4.0 {
 
