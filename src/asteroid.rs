@@ -68,6 +68,9 @@ impl Asteroid {
     pub fn orientation(&self) -> f32 {
         return self.orientation;
     }
+    pub fn is_too_small(&self) -> bool {
+        return self.size < Self::MIN_SIZE;
+    }
     pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
         let position = self.position();
