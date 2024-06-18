@@ -35,6 +35,7 @@ async fn main() {
         }
 
         bullets.retain(|b| b.is_alive());
+        // TODO: remove asteroids that are too small
 
         // for every asteroid on screen
         'outer: for i in 0..asteroids.len() {
@@ -64,7 +65,7 @@ async fn main() {
                 }
             }
 
-            // TODO: check for collision with player and asteroids[i]
+            // TODO: check for collision with player and asteroids[i] and print if there is one
         }
 
         player.draw();
