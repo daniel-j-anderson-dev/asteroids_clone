@@ -96,6 +96,11 @@ impl Asteroid {
 
        return (asteroid_1, asteroid_2);
     }
+    pub fn destroy(self) {
+        if self.size > self.size / 4.0 {
+
+        }
+    }
 }
 impl KinematicGetters for Asteroid {
     fn kinematic(&self) -> &Kinematic {
