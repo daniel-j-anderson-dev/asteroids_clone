@@ -44,32 +44,47 @@ async fn main() {
         }
 
         /* COLLISION DETECTION */
-        // find all bullet-asteroid-collision indexes
-        // TODO: check for asteroid-player-collision in crate::calculate_collision
-        let (collision_indexes, player_collision) = calculate_collisions(&asteroids, &bullets, &player);
+        let mut children = Vec::new();
 
-        // Now that we know which which bullets and asteroids have collided we can process each of them
-        for (i, j) in collision_indexes.into_iter() {
-            // calculate the children asteroids
-            let [child1, child2] = asteroids[i].split(bullets[j].velocity());
-    
-            // add each child to the collection
-            asteroids.push(child1);
-            asteroids.push(child2);
+        for asteroid in asteroids.iter_mut() {
+            for bullet in bullets.iter_mut() {
+                // if the bullet is inside the asteroid
+                if is_point_in_hexagon(
+                    bullet.position(),
+                    asteroid.position(),
+                    asteroid.orientation(),
+                    asteroid.size(),
+                ) {
+                    // calculate the children asteroids
+                    let [child1, child2] = asteroid.split(bullet.velocity());
+            
+                    // collect the children
+                    children.push(child1);
+                    children.push(child2);
+        
+                    // destroy does NOT take ownership it just sets the is_alive field false
+                    asteroid.destroy();
+                    bullet.destroy();
+                }
+            }
 
-            // then remove the asteroid and bullet from the list of active ones
-            asteroids.remove(i);
-            bullets.remove(j);
+            // TODO: check for collision with player and asteroid and print on all collisions
         }
 
-        // Only keep bullets that have lived a certain number of frames
-        bullets.retain(|b| b.is_alive());
-        // TODO: remove asteroids that are too small
+        /* HANDLE COLLISION */
+        // add any children from the collisions
+        asteroids.append(&mut children);
             
+        // Only keep bullets and asteroids that are alive. 
+        bullets.retain_mut(|b| b.is_alive());
+        asteroids.retain_mut(|a| a.is_alive());
+        // Is the player alive?
+
         /* UPDATE GAME PHYSICS */
         player.step();
         asteroids.iter_mut().for_each(|a| a.step());
         bullets.iter_mut().for_each(|b| b.step());
+
 
         next_frame().await;
     }
