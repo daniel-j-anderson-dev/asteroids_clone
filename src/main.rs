@@ -60,7 +60,7 @@ async fn main() {
                     // collect the children
                     children.extend(new_children);
 
-                    // destroy does NOT take ownership it just sets the is_alive field false
+                    // destroy does NOT take ownership it just sets the has_collided field true
                     asteroid.destroy();
                     bullet.destroy();
                 }
