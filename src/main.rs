@@ -45,30 +45,11 @@ async fn main() {
 
         /* COLLISION DETECTION */
         // find all bullet-asteroid-collision indexes
-        let mut collision_indexes = Vec::new();
-
-        // check for asteroid-player-collision
-        // let mut player_hit = false;
-
-        // linear search for asteroid-bullet collisions
-        for (i, asteroid) in asteroids.iter().enumerate() {
-            for (j, bullet) in bullets.iter().enumerate() {
-                // if the bullet is inside the asteroid
-                if is_point_in_hexagon(
-                    bullet.position(),
-                    asteroid.position(),
-                    asteroid.orientation(),
-                    asteroid.size(),
-                ) {
-                    // store the indexes to be processed later
-                    collision_indexes.push((i, j));
-                }
-            }
-            // TODO: check for collision with player and asteroid and print on all collisions
-        }
+        // TODO: check for asteroid-player-collision in crate::calculate_collision
+        let (collision_indexes, player_collision) = calculate_collisions(&asteroids, &bullets, &player);
 
         // Now that we know which which bullets and asteroids have collided we can process each of them
-        for &(i, j) in collision_indexes.iter() {
+        for (i, j) in collision_indexes.into_iter() {
             // calculate the children asteroids
             let [child1, child2] = asteroids[i].split(bullets[j].velocity());
     
