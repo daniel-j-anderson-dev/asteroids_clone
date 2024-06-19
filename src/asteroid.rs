@@ -79,7 +79,7 @@ impl Asteroid {
 
         return Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
     }
-    pub fn split(self, bullet_velocity: Vec2) -> (Self, Self) {
+    pub fn split(&self, bullet_velocity: Vec2) -> [Self; 2] {
         // randomly generate a speed for the children
         let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
 
@@ -106,11 +106,13 @@ impl Asteroid {
             rotation_speed: self.rotation_speed * (2.0 / 3.0),
         };
 
-        return (asteroid_1, asteroid_2);
+        return [asteroid_1, asteroid_2];
     }
     /// The asteroid is "destroyed" when it is removed from the collection in main.
     /// The asteroid is dropped when .split is called.
-    /// See: [Asteroid::is_too_small]
+    /// ## See
+    ///   - [Asteroid::is_too_small]
+    ///   - main.rs::main
     pub fn destroy(self) {
         if self.size > self.size / 4.0 {}
     }
