@@ -51,10 +51,12 @@ async fn main() {
                     asteroids[i].orientation(),
                     asteroids[i].size(),
                 ) {
-                    // then remove that asteroid
+                    // then remove that asteroid from the list of active asteroids
                     let parent = asteroids.remove(i);
                     
                     // split the parent apart
+                    // The parent Asteroid has already been removed 
+                    // but calling split here takes ownership thus dropping the parent Asteroid
                     let (child1, child2) = parent.split(bullets[j].velocity());
                     
                     // and destroy the bullet
