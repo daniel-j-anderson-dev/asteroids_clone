@@ -48,11 +48,10 @@ async fn main() {
         let mut collision_indexes = Vec::new();
 
         // check for asteroid-player-collision
-        // let mut asteroid_player_collision = false;
+        // let mut player_hit = false;
 
-        // for every asteroid on screen
+        // linear search for asteroid-bullet collisions
         for (i, asteroid) in asteroids.iter().enumerate() {
-            // linear search for asteroid-bullet collisions
             for (j, bullet) in bullets.iter().enumerate() {
                 // if the bullet is inside the asteroid
                 if is_point_in_hexagon(
@@ -61,13 +60,14 @@ async fn main() {
                     asteroid.orientation(),
                     asteroid.size(),
                 ) {
+                    // store the indexes to be processed later
                     collision_indexes.push((i, j));
                 }
             }
             // TODO: check for collision with player and asteroid and print on all collisions
         }
 
-        // Now that we know which which bullets and asteroids have collided we can handle each of them
+        // Now that we know which which bullets and asteroids have collided we can process each of them
         for &(i, j) in collision_indexes.iter() {
             // calculate the children asteroids
             let [child1, child2] = asteroids[i].split(bullets[j].velocity());
@@ -80,13 +80,11 @@ async fn main() {
             asteroids.remove(i);
             bullets.remove(j);
         }
-        
 
+        // Only keep bullets that have lived a certain number of frames
         bullets.retain(|b| b.is_alive());
         // TODO: remove asteroids that are too small
-        asteroids.retain(|a| !a.is_too_small());
             
-
         /* UPDATE GAME PHYSICS */
         player.step();
         asteroids.iter_mut().for_each(|a| a.step());
