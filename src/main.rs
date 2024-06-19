@@ -17,8 +17,10 @@ fn settings() -> Conf {
 
 #[macroquad::main(settings)]
 async fn main() {
+    // Ensure random number generation doesn't feel consistent to the player
     initialize_rng();
 
+    // Define game entities
     let mut player = Player::default();
     let mut asteroids = Asteroid::many_random(10);
     let mut bullets = Bullet::many_new();
@@ -26,17 +28,18 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
+        /* HANDLE INPUT */
+        // Reset asteroids with space for testing
         if is_key_pressed(KeyCode::Space) {
             asteroids = Asteroid::many_random(10);
         }
 
+        // fire a bullet with a z press
         if is_key_pressed(KeyCode::Z) {
             bullets.push(Bullet::from(&player));
         }
 
-        bullets.retain(|b| b.is_alive());
-        // TODO: remove asteroids that are too small
-
+        /* COLLISION DETECTION */
         // for every asteroid on screen
         'outer: for i in 0..asteroids.len() {
             // linear search for collisions with each bullet
@@ -65,16 +68,21 @@ async fn main() {
                 }
             }
 
-            // TODO: check for collision with player and asteroids[i] and print if there is one
+            // TODO: check for collision with player and asteroids[i] and print on all collisions
         }
 
+        /* DRAW GAME */
         player.draw();
         asteroids.iter().for_each(|a| a.draw());
         bullets.iter().for_each(|b| b.draw());
         
+        /* UPDATE GAME STATE */
         player.step();
         asteroids.iter_mut().for_each(|a| a.step());
         bullets.iter_mut().for_each(|b| b.step());
+        
+        bullets.retain(|b| b.is_alive());
+        // TODO: remove asteroids that are too small
 
         next_frame().await;
     }
