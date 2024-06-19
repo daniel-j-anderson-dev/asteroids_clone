@@ -9,7 +9,12 @@ use macroquad::prelude::*;
 
 const FRAC_SQRT3_2: f32 = 0.86602540378443864676372317075294;
 
-pub fn is_point_in_hexagon(point: Vec2, hexagon_center: Vec2, hexagon_orientation: f32, hexagon_size: f32) -> bool {
+pub fn is_point_in_hexagon(
+    point: Vec2,
+    hexagon_center: Vec2,
+    hexagon_orientation: f32,
+    hexagon_size: f32,
+) -> bool {
     // Translate point to the hexagon's origin
     let translated = vec2(point.x - hexagon_center.x, point.y - hexagon_center.y);
 

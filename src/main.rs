@@ -45,9 +45,9 @@ async fn main() {
         'outer: while i < asteroids.len() {
             // TODO: check for collision with player and asteroids[i] and print on all collisions
 
-            // linear search for asteroid-bullet collisions 
+            // linear search for asteroid-bullet collisions
             let mut j = 0;
-            while j <bullets.len() {
+            while j < bullets.len() {
                 // if the bullet is inside the asteroid
                 if is_point_in_hexagon(
                     bullets[j].position(),
@@ -57,12 +57,12 @@ async fn main() {
                 ) {
                     // then remove that asteroid from the list of active asteroids
                     let parent = asteroids.remove(i);
-                    
+
                     // split the parent apart
                     // The `parent` has already been removed; regardless calling `split` here
                     // takes ownership thus dropping the `parent` value.
                     let (child1, child2) = parent.split(bullets[j].velocity());
-                    
+
                     // and destroy the bullet
                     bullets.remove(j);
 
@@ -85,12 +85,12 @@ async fn main() {
         player.draw();
         asteroids.iter().for_each(|a| a.draw());
         bullets.iter().for_each(|b| b.draw());
-        
+
         /* UPDATE GAME STATE */
         player.step();
         asteroids.iter_mut().for_each(|a| a.step());
         bullets.iter_mut().for_each(|b| b.step());
-        
+
         bullets.retain(|b| b.is_alive());
         // TODO: remove asteroids that are too small
         asteroids.retain(|a| !a.is_too_small());

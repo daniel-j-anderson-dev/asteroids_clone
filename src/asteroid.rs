@@ -6,7 +6,8 @@
 //! - draw a line between each vertex
 
 use crate::{
-    polar_vec2, rock_texture, Bullet, Draw, Kinematic, KinematicGetters, Player, RotationMatrix, FRAC_SQRT3_2
+    polar_vec2, rock_texture, Bullet, Draw, Kinematic, KinematicGetters, Player, RotationMatrix,
+    FRAC_SQRT3_2,
 };
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::{FRAC_PI_2, TAU};
@@ -81,7 +82,7 @@ impl Asteroid {
     pub fn split(self, bullet_velocity: Vec2) -> (Self, Self) {
         // randomly generate a speed for the children
         let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
-        
+
         // create a unit vector perpendicular to the bullet's velocity.
         //   - rotate 90°: swap the x and y components, and multiply the x component by -1
         //   - ensure norm == 1 (aka unit vector): `normalize` returns a vector with the same direction but with size normalized to 1
@@ -90,31 +91,28 @@ impl Asteroid {
 
         let asteroid_velocity_1 = speed * direction;
         let asteroid_velocity_2 = -asteroid_velocity_1;
-        
+
         let asteroid_1 = Asteroid {
-            kinematic: Kinematic::new(self.position(), asteroid_velocity_1, Vec2::ZERO,),
+            kinematic: Kinematic::new(self.position(), asteroid_velocity_1, Vec2::ZERO),
             size: self.size / 2.0,
             orientation: self.orientation,
             rotation_speed: self.rotation_speed * (2.0 / 3.0),
         };
 
         let asteroid_2 = Asteroid {
-            kinematic: Kinematic::new(self.position(), asteroid_velocity_2, Vec2::ZERO,),
+            kinematic: Kinematic::new(self.position(), asteroid_velocity_2, Vec2::ZERO),
             size: self.size / 2.0,
             orientation: self.orientation,
             rotation_speed: self.rotation_speed * (2.0 / 3.0),
         };
-        
 
-       return (asteroid_1, asteroid_2);
+        return (asteroid_1, asteroid_2);
     }
     /// The asteroid is "destroyed" when it is removed from the collection in main.
     /// The asteroid is dropped when .split is called.
     /// See: [Asteroid::is_too_small]
     pub fn destroy(self) {
-        if self.size > self.size / 4.0 {
-
-        }
+        if self.size > self.size / 4.0 {}
     }
 }
 impl KinematicGetters for Asteroid {
