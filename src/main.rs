@@ -45,7 +45,6 @@ async fn main() {
 
         /* COLLISION DETECTION */
         let mut children = Vec::new();
-
         for asteroid in asteroids.iter_mut() {
             for bullet in bullets.iter_mut() {
                 // if the bullet is inside the asteroid
@@ -75,8 +74,8 @@ async fn main() {
         asteroids.append(&mut children);
 
         // Only keep bullets and asteroids that are alive or valid.
-        bullets.retain(|b| b.is_alive() && !b.is_too_old());
-        asteroids.retain(|a| a.is_alive() && !a.is_too_small());
+        bullets.retain(|b| !b.has_collided() && !b.is_too_old());
+        asteroids.retain(|a| !a.has_collided() && !a.is_too_small());
         // Is the player alive?
 
         /* UPDATE GAME PHYSICS */

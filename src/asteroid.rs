@@ -17,7 +17,7 @@ pub struct Asteroid {
     size: f32,
     orientation: f32,
     rotation_speed: f32,
-    is_alive: bool,
+    has_collided: bool,
 }
 impl Asteroid {
     pub const UNIT_VERTICES: [Vec2; 6] = [
@@ -62,7 +62,7 @@ impl Asteroid {
             size,
             orientation,
             rotation_speed,
-            is_alive: true,
+            has_collided: false,
         };
     }
     pub fn size(&self) -> f32 {
@@ -74,8 +74,8 @@ impl Asteroid {
     pub fn is_too_small(&self) -> bool {
         return self.size < Self::MIN_SIZE;
     }
-    pub fn is_alive(&self) -> bool {
-        return self.is_alive;
+    pub fn has_collided(&self) -> bool {
+        return self.has_collided;
     }
     pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
@@ -102,7 +102,7 @@ impl Asteroid {
             size: self.size / 2.0,
             orientation: self.orientation,
             rotation_speed: self.rotation_speed * (2.0 / 3.0),
-            is_alive: true,
+            has_collided: false,
         };
 
         let asteroid_2 = Asteroid {
@@ -110,7 +110,7 @@ impl Asteroid {
             size: self.size / 2.0,
             orientation: self.orientation,
             rotation_speed: self.rotation_speed * (2.0 / 3.0),
-            is_alive: true,
+            has_collided: false,
         };
 
         return [asteroid_1, asteroid_2];
@@ -123,7 +123,7 @@ impl KinematicGetters for Asteroid {
 }
 impl Asteroid {
     pub fn destroy(&mut self) {
-        self.is_alive = false;
+        self.has_collided = true;
     }
     pub fn step(&mut self) {
         self.rotate();
