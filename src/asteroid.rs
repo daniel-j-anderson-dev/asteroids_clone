@@ -62,7 +62,7 @@ impl Asteroid {
             size,
             orientation,
             rotation_speed,
-            is_alive: true
+            is_alive: true,
         };
     }
     pub fn size(&self) -> f32 {

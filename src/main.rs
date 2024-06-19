@@ -57,11 +57,11 @@ async fn main() {
                 ) {
                     // calculate the children asteroids
                     let [child1, child2] = asteroid.split(bullet.velocity());
-            
+
                     // collect the children
                     children.push(child1);
                     children.push(child2);
-        
+
                     // destroy does NOT take ownership it just sets the is_alive field false
                     asteroid.destroy();
                     bullet.destroy();
@@ -74,8 +74,8 @@ async fn main() {
         /* HANDLE COLLISION */
         // add any children from the collisions
         asteroids.append(&mut children);
-            
-        // Only keep bullets and asteroids that are alive. 
+
+        // Only keep bullets and asteroids that are alive.
         bullets.retain(|b| b.is_alive() && !b.is_too_old());
         asteroids.retain(|a| a.is_alive() && !a.is_too_small());
         // Is the player alive?
@@ -84,7 +84,6 @@ async fn main() {
         player.step();
         asteroids.iter_mut().for_each(|a| a.step());
         bullets.iter_mut().for_each(|b| b.step());
-
 
         next_frame().await;
     }
