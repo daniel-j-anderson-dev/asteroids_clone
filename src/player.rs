@@ -7,6 +7,7 @@ use std::f32::consts::{FRAC_PI_2, TAU};
 
 pub struct Player {
     kinematic: Kinematic,
+    is_alive: bool,
     lives: usize,
     orientation: f32,
 }
@@ -31,7 +32,11 @@ impl Player {
             kinematic: Kinematic::new(screen_origin(), Vec2::ZERO, Vec2::ZERO),
             lives: 3,
             orientation: 0.0,
+            is_alive: true,
         };
+    }
+    pub fn is_alive(&self) -> bool {
+        return self.is_alive;
     }
     /// Getter for the player's orientation angle
     pub fn orientation(&self) -> f32 {
@@ -53,6 +58,9 @@ impl KinematicGetters for Player {
     }
 }
 impl Player {
+    pub fn destroy(&mut self) {
+        self.is_alive = false;
+    }
     /// - rotate
     ///   - Left (counter-clockwise)
     ///   - Right (clockwise)
