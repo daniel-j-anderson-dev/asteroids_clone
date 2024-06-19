@@ -56,11 +56,10 @@ async fn main() {
                     asteroid.size(),
                 ) {
                     // calculate the children asteroids
-                    let [child1, child2] = asteroid.split(bullet.velocity());
+                    let new_children = asteroid.split(bullet.velocity());
 
                     // collect the children
-                    children.push(child1);
-                    children.push(child2);
+                    children.extend(new_children);
 
                     // destroy does NOT take ownership it just sets the is_alive field false
                     asteroid.destroy();
