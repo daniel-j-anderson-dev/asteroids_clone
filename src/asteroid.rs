@@ -74,13 +74,7 @@ impl Asteroid {
     pub fn is_too_small(&self) -> bool {
         return self.size < Self::MIN_SIZE;
     }
-    pub fn is_alive(&mut self) -> bool {
-        if self.is_alive {
-            if self.is_too_small() {
-                self.is_alive = false;
-            }
-        }
-
+    pub fn is_alive(&self) -> bool {
         return self.is_alive;
     }
     pub fn vertices(&self) -> [Vec2; 6] {

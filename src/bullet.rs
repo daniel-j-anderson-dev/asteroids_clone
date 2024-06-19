@@ -31,13 +31,10 @@ impl Bullet {
             is_alive: true,
         };
     }
-    pub fn is_alive(&mut self) -> bool {
-        if self.is_alive {
-            if self.frames_left == 0 {
-                self.is_alive = false;
-            }
-        }
-
+    pub fn is_too_old(&self) -> bool {
+        return self.frames_left == 0;
+    }
+    pub fn is_alive(&self) -> bool {
         return self.is_alive;
     }
     pub fn destroy(&mut self) {

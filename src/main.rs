@@ -66,9 +66,17 @@ async fn main() {
                     asteroid.destroy();
                     bullet.destroy();
                 }
+
+                if bullet.is_too_old() {
+                    bullet.destroy();
+                }
             }
 
             // TODO: check for collision with player and asteroid and print on all collisions
+
+            if asteroid.is_too_small() {
+                asteroid.destroy();
+            }
         }
 
         /* HANDLE COLLISION */
@@ -76,8 +84,8 @@ async fn main() {
         asteroids.append(&mut children);
             
         // Only keep bullets and asteroids that are alive. 
-        bullets.retain_mut(|b| b.is_alive());
-        asteroids.retain_mut(|a| a.is_alive());
+        bullets.retain(|b| b.is_alive());
+        asteroids.retain(|a| a.is_alive());
         // Is the player alive?
 
         /* UPDATE GAME PHYSICS */
