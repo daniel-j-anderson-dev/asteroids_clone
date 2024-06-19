@@ -46,8 +46,9 @@ async fn main() {
         /* COLLISION DETECTION */
         
         // find all bullet-asteroid-collision indexes
-        // check for asteroid-player-collision
         let mut collision_indexes = Vec::new();
+
+        // check for asteroid-player-collision
         // let mut asteroid_player_collision = false;
 
         // for every asteroid on screen
@@ -64,7 +65,7 @@ async fn main() {
                     collision_indexes.push((i, j));
                 }
             }
-            // TODO: check for collision with player and asteroids[i] and print on all collisions
+            // TODO: check for collision with player and asteroid and print on all collisions
         }
 
         // Now that we know which which bullets and asteroids have collided we can handle each of them
