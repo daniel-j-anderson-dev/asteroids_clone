@@ -26,7 +26,11 @@ async fn main() {
     let mut bullets = Bullet::many_new();
 
     loop {
+        /* DRAW GAME */
         clear_background(BLACK);
+        player.draw();
+        asteroids.iter().for_each(|a| a.draw());
+        bullets.iter().for_each(|b| b.draw());
 
         /* HANDLE INPUT */
         // Reset asteroids with space for testing
@@ -40,60 +44,53 @@ async fn main() {
         }
 
         /* COLLISION DETECTION */
-        // for every asteroid on screen
-        let mut i = 0;
-        'outer: while i < asteroids.len() {
-            // TODO: check for collision with player and asteroids[i] and print on all collisions
+        
+        // find all bullet-asteroid-collision indexes
+        // check for asteroid-player-collision
+        let mut collision_indexes = Vec::new();
+        // let mut asteroid_player_collision = false;
 
+        // for every asteroid on screen
+        for (i, asteroid) in asteroids.iter().enumerate() {
             // linear search for asteroid-bullet collisions
-            let mut j = 0;
-            while j < bullets.len() {
+            for (j, bullet) in bullets.iter().enumerate() {
                 // if the bullet is inside the asteroid
                 if is_point_in_hexagon(
-                    bullets[j].position(),
-                    asteroids[i].position(),
-                    asteroids[i].orientation(),
-                    asteroids[i].size(),
+                    bullet.position(),
+                    asteroid.position(),
+                    asteroid.orientation(),
+                    asteroid.size(),
                 ) {
-                    // then remove that asteroid from the list of active asteroids
-                    let parent = asteroids.remove(i);
-
-                    // split the parent apart
-                    // The `parent` has already been removed; regardless calling `split` here
-                    // takes ownership thus dropping the `parent` value.
-                    let (child1, child2) = parent.split(bullets[j].velocity());
-
-                    // and destroy the bullet
-                    bullets.remove(j);
-
-                    // and add each child to the collection
-                    asteroids.push(child1);
-                    asteroids.push(child2);
-
-                    // start the search over no that the active Asteroids have changed
-                    i = 0;
-                    continue 'outer;
+                    collision_indexes.push((i, j));
                 }
-
-                j += 1;
             }
-
-            i += 1;
+            // TODO: check for collision with player and asteroids[i] and print on all collisions
         }
 
-        /* DRAW GAME */
-        player.draw();
-        asteroids.iter().for_each(|a| a.draw());
-        bullets.iter().for_each(|b| b.draw());
+        // Now that we know which which bullets and asteroids have collided we can handle each of them
+        for &(i, j) in collision_indexes.iter() {
+            // calculate the children asteroids
+            let [child1, child2] = asteroids[i].split(bullets[j].velocity());
+    
+            // add each child to the collection
+            asteroids.push(child1);
+            asteroids.push(child2);
 
-        /* UPDATE GAME STATE */
-        player.step();
-        asteroids.iter_mut().for_each(|a| a.step());
-        bullets.iter_mut().for_each(|b| b.step());
+            // then remove the asteroid and bullet from the list of active ones
+            asteroids.remove(i);
+            bullets.remove(j);
+        }
+        
 
         bullets.retain(|b| b.is_alive());
         // TODO: remove asteroids that are too small
         asteroids.retain(|a| !a.is_too_small());
+            
+
+        /* UPDATE GAME PHYSICS */
+        player.step();
+        asteroids.iter_mut().for_each(|a| a.step());
+        bullets.iter_mut().for_each(|b| b.step());
 
         next_frame().await;
     }
