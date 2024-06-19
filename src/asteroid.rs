@@ -33,8 +33,8 @@ impl Asteroid {
     pub const MIN_ROTATION_SPEED: f32 = Player::ROTATION_DELTA / 4.0;
     pub const MAX_ROTATION_SPEED: f32 = Player::ROTATION_DELTA / 2.0;
 
-    pub const MIN_SIZE: f32 = Player::SIZE;
-    pub const MAX_SIZE: f32 = Player::SIZE * 2.0;
+    pub const MIN_SIZE: f32 = Player::SIZE / 2.0;
+    pub const MAX_SIZE: f32 = Player::SIZE * 4.0;
 }
 impl Asteroid {
     pub fn many_random(count: usize) -> Vec<Self> {
@@ -79,7 +79,16 @@ impl Asteroid {
         return Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
     }
     pub fn split(self, bullet_velocity: Vec2) -> (Self, Self) {
-        let asteroid_velocity_1 = vec2(-bullet_velocity.y, bullet_velocity.x);
+        // randomly generate a speed for the children
+        let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
+        
+        // create a unit vector perpendicular to the bullet's velocity.
+        //   - rotate 90°: swap the x and y components, and multiply the x component by -1
+        //   - ensure norm == 1 (aka unit vector): `normalize` returns a vector with the same direction but with size normalized to 1
+        // SAFETY: bullet_velocity is constant non-zero so `normalize` wont panic on division-by-zero
+        let direction = vec2(-bullet_velocity.y, bullet_velocity.x).normalize();
+
+        let asteroid_velocity_1 = speed * direction;
         let asteroid_velocity_2 = -asteroid_velocity_1;
         
         let asteroid_1 = Asteroid {
