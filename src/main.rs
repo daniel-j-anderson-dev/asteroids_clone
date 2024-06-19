@@ -75,7 +75,7 @@ async fn main() {
         // add any children from the collisions
         asteroids.append(&mut children);
 
-        // Only keep bullets and asteroids that are alive.
+        // Only keep bullets and asteroids that are alive or valid.
         bullets.retain(|b| b.is_alive() && !b.is_too_old());
         asteroids.retain(|a| a.is_alive() && !a.is_too_small());
         // Is the player alive?
