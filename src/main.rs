@@ -44,7 +44,6 @@ async fn main() {
         }
 
         /* COLLISION DETECTION */
-        
         // find all bullet-asteroid-collision indexes
         let mut collision_indexes = Vec::new();
 
