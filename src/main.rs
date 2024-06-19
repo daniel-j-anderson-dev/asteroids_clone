@@ -41,10 +41,14 @@ async fn main() {
 
         /* COLLISION DETECTION */
         // for every asteroid on screen
-        'outer: for i in 0..asteroids.len() {
-            // linear search for collisions with each bullet
-            for j in 0..bullets.len() {
-                // if the bullet is inside the asteroid (collision)
+        let mut i = 0;
+        'outer: while i < asteroids.len() {
+            // TODO: check for collision with player and asteroids[i] and print on all collisions
+
+            // linear search for asteroid-bullet collisions 
+            let mut j = 0;
+            while j <bullets.len() {
+                // if the bullet is inside the asteroid
                 if is_point_in_hexagon(
                     bullets[j].position(),
                     asteroids[i].position(),
@@ -55,8 +59,8 @@ async fn main() {
                     let parent = asteroids.remove(i);
                     
                     // split the parent apart
-                    // The parent Asteroid has already been removed 
-                    // but calling split here takes ownership thus dropping the parent Asteroid
+                    // The `parent` has already been removed; regardless calling `split` here
+                    // takes ownership thus dropping the `parent` value.
                     let (child1, child2) = parent.split(bullets[j].velocity());
                     
                     // and destroy the bullet
@@ -66,11 +70,15 @@ async fn main() {
                     asteroids.push(child1);
                     asteroids.push(child2);
 
-                    break 'outer;
+                    // start the search over no that the active Asteroids have changed
+                    i = 0;
+                    continue 'outer;
                 }
+
+                j += 1;
             }
 
-            // TODO: check for collision with player and asteroids[i] and print on all collisions
+            i += 1;
         }
 
         /* DRAW GAME */
@@ -85,6 +93,7 @@ async fn main() {
         
         bullets.retain(|b| b.is_alive());
         // TODO: remove asteroids that are too small
+        asteroids.retain(|a| !a.is_too_small());
 
         next_frame().await;
     }
