@@ -15,7 +15,7 @@ impl Player {
     pub const SIZE: f32 = 20.0;
     /// An angle in radians
     pub const ROTATION_DELTA: f32 = 0.1;
-    pub const THRUST_ACCELERATION: f32 = 0.2;
+    pub const THRUST: f32 = 0.2;
 
     pub const MAX_SPEED: f32 = Self::SIZE * 2.0;
 
@@ -77,7 +77,7 @@ impl Player {
         self.orientation %= TAU;
 
         if is_key_down(KeyCode::Up) {
-            let thrust = polar_vec2(Self::THRUST_ACCELERATION, self.orientation);
+            let thrust = polar_vec2(Self::THRUST, self.orientation);
             self.kinematic.lerp_acceleration(thrust)
         }
     }
