@@ -84,7 +84,10 @@ impl Asteroid {
 
         return Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
     }
+    /// Returns two [Asteroid]s at the same position as `self` with opposite velocities perpendicular to `bullet_velocity`
     pub fn split(&self, bullet_velocity: Vec2) -> [Self; 2] {
+        let position = self.position();
+
         // randomly generate a speed for the children
         let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
 
@@ -94,26 +97,29 @@ impl Asteroid {
         // SAFETY: bullet_velocity is constant non-zero so `normalize` wont panic on division-by-zero
         let direction = vec2(-bullet_velocity.y, bullet_velocity.x).normalize();
 
-        let asteroid_velocity_1 = speed * direction;
-        let asteroid_velocity_2 = -asteroid_velocity_1;
+        let child_1_velocity = speed * direction;
+        let child_2_velocity = -child_1_velocity;
 
-        let asteroid_1 = Asteroid {
-            kinematic: Kinematic::new(self.position(), asteroid_velocity_1, Vec2::ZERO),
-            size: self.size / 2.0,
+        const CHILD_SIZE_FACTOR: f32 = 1.0 / 2.0;
+        const CHILD_ROTATION_SPEED_FACTOR: f32 = 2.0 / 3.0;
+
+        let child_1 = Asteroid {
+            kinematic: Kinematic::new(position, child_1_velocity, Vec2::ZERO),
+            size: self.size * CHILD_SIZE_FACTOR,
             orientation: self.orientation,
-            rotation_speed: self.rotation_speed * (2.0 / 3.0),
+            rotation_speed: self.rotation_speed * CHILD_ROTATION_SPEED_FACTOR,
             has_collided: false,
         };
 
         let asteroid_2 = Asteroid {
-            kinematic: Kinematic::new(self.position(), asteroid_velocity_2, Vec2::ZERO),
-            size: self.size / 2.0,
+            kinematic: Kinematic::new(position, child_2_velocity, Vec2::ZERO),
+            size: self.size * CHILD_SIZE_FACTOR,
             orientation: self.orientation,
-            rotation_speed: self.rotation_speed * (2.0 / 3.0),
+            rotation_speed: self.rotation_speed * CHILD_ROTATION_SPEED_FACTOR,
             has_collided: false,
         };
 
-        return [asteroid_1, asteroid_2];
+        return [child_1, asteroid_2];
     }
 }
 impl KinematicGetters for Asteroid {
