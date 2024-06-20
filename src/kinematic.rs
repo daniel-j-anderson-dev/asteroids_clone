@@ -35,8 +35,8 @@ impl KinematicGetters for Kinematic {
     }
 }
 impl Kinematic {
-    pub fn lerp_acceleration(&mut self, acceleration: Vec2) {
-        self.acceleration = self.acceleration.lerp(acceleration, 0.1);
+    pub fn apply_acceleration(&mut self, acceleration: Vec2) {
+        self.acceleration = self.acceleration.move_towards(acceleration, 0.01);
     }
 
     pub fn cap_speed(&mut self, max_speed: f32) {
