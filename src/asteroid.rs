@@ -37,6 +37,9 @@ impl Asteroid {
 
     pub const MIN_SIZE: f32 = Player::SIZE / 2.0;
     pub const MAX_SIZE: f32 = Player::SIZE * 4.0;
+
+    const CHILD_SIZE_FACTOR: f32 = 1.0 / 2.0;
+    const CHILD_ROTATION_SPEED_FACTOR: f32 = 2.0 / 3.0;
 }
 impl Asteroid {
     pub fn many_random(count: usize) -> Vec<Self> {
@@ -65,6 +68,21 @@ impl Asteroid {
             has_collided: false,
         };
     }
+    /// Creates another [Asteroid] with
+    /// - the same position as `self`
+    /// - a given `velocity`
+    /// - size scaled by [Self::CHILD_SIZE_FACTOR]
+    /// - rotation speed scaled by [Self::CHILD_ROTATION_SPEED_FACTOR]
+    /// - has **not** collided
+    pub fn create_child(&self, velocity: Vec2) -> Self {
+        return Self {
+            kinematic: Kinematic::new(self.position(), velocity, Vec2::ZERO),
+            size: self.size * Self::CHILD_SIZE_FACTOR,
+            orientation: self.orientation,
+            rotation_speed: self.rotation_speed * Self::CHILD_ROTATION_SPEED_FACTOR,
+            has_collided: false,
+        };
+    }
     pub fn size(&self) -> f32 {
         return self.size;
     }
@@ -86,8 +104,6 @@ impl Asteroid {
     }
     /// Returns two [Asteroid]s at the same position as `self` with opposite velocities perpendicular to `bullet_velocity`
     pub fn split(&self, bullet_velocity: Vec2) -> [Self; 2] {
-        let position = self.position();
-
         // randomly generate a speed for the children
         let speed = gen_range(Self::MIN_SPEED, Self::MAX_SPEED);
 
@@ -97,29 +113,12 @@ impl Asteroid {
         // SAFETY: bullet_velocity is constant non-zero so `normalize` wont panic on division-by-zero
         let direction = vec2(-bullet_velocity.y, bullet_velocity.x).normalize();
 
-        let child_1_velocity = speed * direction;
-        let child_2_velocity = -child_1_velocity;
-
-        const CHILD_SIZE_FACTOR: f32 = 1.0 / 2.0;
-        const CHILD_ROTATION_SPEED_FACTOR: f32 = 2.0 / 3.0;
-
-        let child_1 = Asteroid {
-            kinematic: Kinematic::new(position, child_1_velocity, Vec2::ZERO),
-            size: self.size * CHILD_SIZE_FACTOR,
-            orientation: self.orientation,
-            rotation_speed: self.rotation_speed * CHILD_ROTATION_SPEED_FACTOR,
-            has_collided: false,
-        };
-
-        let asteroid_2 = Asteroid {
-            kinematic: Kinematic::new(position, child_2_velocity, Vec2::ZERO),
-            size: self.size * CHILD_SIZE_FACTOR,
-            orientation: self.orientation,
-            rotation_speed: self.rotation_speed * CHILD_ROTATION_SPEED_FACTOR,
-            has_collided: false,
-        };
-
-        return [child_1, asteroid_2];
+        let velocity = speed * direction;
+        
+        return [
+            self.create_child(velocity),
+            self.create_child(-velocity),
+        ];
     }
 }
 impl KinematicGetters for Asteroid {
