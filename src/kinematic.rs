@@ -1,5 +1,6 @@
 use macroquad::prelude::*;
 
+/// This trait provides default implementations of [Kinematic]'s getters if `Self` can provide a reference to a [Kinematic]
 pub trait KinematicGetters {
     fn kinematic(&self) -> &Kinematic;
     fn position(&self) -> Vec2 {
@@ -13,6 +14,7 @@ pub trait KinematicGetters {
     }
 }
 
+/// This struct is responsible for movement in 
 pub struct Kinematic {
     position: Vec2,
     velocity: Vec2,
@@ -42,6 +44,7 @@ impl Kinematic {
             self.velocity = self.velocity.normalize() * max_speed;
         }
     }
+
     pub fn keep_on_screen(&mut self) {
         // take a peek forward in time!
         let next_position = self.position + self.velocity;
@@ -61,17 +64,16 @@ impl Kinematic {
             self.position.y = 0.0;
         }
     }
+
+    /// Calculates and applies the next `position` and `velocity` using [Euler's Method](https://en.wikipedia.org/wiki/Euler_method)
     pub fn step_motion(&mut self) {
-        let p_0 = self.position.clone();
-        let v_0 = self.velocity.clone();
-        let a_0 = self.acceleration.clone();
+        let next_position = self.position + self.velocity;
+        let next_velocity = self.velocity + self.acceleration;
 
-        let p_1 = p_0 + v_0;
-        let v_1 = v_0 + a_0;
-
-        self.position = p_1;
-        self.velocity = v_1;
+        self.position = next_position;
+        self.velocity = next_velocity;
     }
+    
     pub fn step_friction(&mut self) {
         // apply friction (using linear interpolation with <0, 0> aka lerp)
         self.acceleration += (Vec2::ZERO - self.acceleration) * 0.02;
