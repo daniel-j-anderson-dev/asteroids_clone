@@ -44,7 +44,7 @@ pub trait KinematicMutators {
     }
 }
 
-/// This struct is responsible for movement in 
+/// This struct is responsible for movement in [crate::Bullet] and [crate::Asteroid]
 pub struct Kinematic {
     position: Vec2,
     velocity: Vec2,
