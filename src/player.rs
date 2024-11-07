@@ -1,6 +1,6 @@
 use crate::{
     duck_texture, kinematic::Kinematic, polar_vec2, screen_origin, Draw, KinematicGetters,
-    RotationMatrix,
+    KinematicMutators, RotationMatrix,
 };
 use macroquad::prelude::*;
 use std::f32::consts::{FRAC_PI_2, TAU};
@@ -28,33 +28,46 @@ impl Player {
 impl Player {
     /// Create a stationary player at the screen's origin
     pub fn default() -> Player {
-        return Player {
+        Player {
             kinematic: Kinematic::new(screen_origin(), Vec2::ZERO, Vec2::ZERO),
             lives: 3,
             orientation: 0.0,
             has_collided: false,
-        };
+        }
     }
     pub fn has_collided(&self) -> bool {
-        return self.has_collided;
+        self.has_collided
     }
     /// Getter for the player's orientation angle
     pub fn orientation(&self) -> f32 {
-        return self.orientation;
+        self.orientation
     }
     /// Returns vertices of player by calculating default vertices rotated by `self.orientation` then translated by `self.position`
     pub fn vertices(&self) -> [Vec2; 3] {
         let rotation = self.orientation.rotation_matrix();
-        let position = self.position();
+        let position = self.kinematic.position();
 
         let vertices = Self::VERTICES.map(|vertex| (rotation * vertex) + position);
 
-        return vertices;
+        vertices
+    }
+    pub fn front_vertex(&self) -> Vec2 {
+        let rotation = self.orientation.rotation_matrix();
+        let position = self.kinematic.position();
+
+        let front_vertex = rotation * Self::VERTICES[0] + position;
+
+        front_vertex
     }
 }
 impl KinematicGetters for Player {
     fn kinematic(&self) -> &Kinematic {
-        return &self.kinematic;
+        &self.kinematic
+    }
+}
+impl KinematicMutators for Player {
+    fn kinematic_mut(&mut self) -> &mut Kinematic {
+        &mut self.kinematic
     }
 }
 impl Player {
@@ -78,16 +91,15 @@ impl Player {
 
         if is_key_down(KeyCode::Up) {
             let thrust = polar_vec2(Self::THRUST, self.orientation);
-            self.kinematic.apply_acceleration(thrust)
+            self.apply_acceleration(thrust)
         }
     }
     /// Move one time step further in the player simulation
     pub fn step(&mut self) {
-        self.handle_input();
-        self.kinematic.cap_speed(Self::MAX_SPEED);
-        self.kinematic.keep_on_screen();
-        self.kinematic.step_motion();
-        self.kinematic.step_friction();
+        self.cap_speed(Self::MAX_SPEED);
+        self.keep_on_screen();
+        self.step_motion();
+        self.step_friction();
     }
 }
 impl Draw for Player {
@@ -95,7 +107,6 @@ impl Draw for Player {
         let position = self.position();
         let [v1, v2, v3] = self.vertices();
         draw_triangle(v1, v2, v3, WHITE);
-        draw_circle(position.x, position.y, 2.5, RED);
 
         const TEXTURE_OFFSET: f32 = Player::SIZE / 2.0;
         let texture_position = position - TEXTURE_OFFSET;
@@ -113,5 +124,6 @@ impl Draw for Player {
                 pivot: None,
             },
         );
+        draw_circle(position.x, position.y, 2.5, RED);
     }
 }
