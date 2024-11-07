@@ -4,13 +4,43 @@ use macroquad::prelude::*;
 pub trait KinematicGetters {
     fn kinematic(&self) -> &Kinematic;
     fn position(&self) -> Vec2 {
-        return self.kinematic().position;
+        self.kinematic().position
     }
     fn velocity(&self) -> Vec2 {
-        return self.kinematic().velocity;
+        self.kinematic().velocity
+    }
+    fn speed(&self) -> f32 {
+        self.kinematic().velocity.length()
     }
     fn acceleration(&self) -> Vec2 {
-        return self.kinematic().acceleration;
+        self.kinematic().acceleration
+    }
+}
+pub trait KinematicMutators {
+    fn kinematic_mut(&mut self) -> &mut Kinematic;
+    fn position_mut(&mut self) -> &mut Vec2 {
+        &mut self.kinematic_mut().position
+    }
+    fn velocity_mut(&mut self) -> &mut Vec2 {
+        &mut self.kinematic_mut().velocity
+    }
+    fn acceleration_mut(&mut self) -> &mut Vec2 {
+        &mut self.kinematic_mut().acceleration
+    }
+    fn cap_speed(&mut self, max_speed: f32) {
+        self.kinematic_mut().cap_speed(max_speed);
+    }
+    fn keep_on_screen(&mut self) {
+        self.kinematic_mut().keep_on_screen();
+    }
+    fn step_motion(&mut self) {
+        self.kinematic_mut().step_motion();
+    }
+    fn step_friction(&mut self) {
+        self.kinematic_mut().step_friction();
+    }
+    fn apply_acceleration(&mut self, acceleration: Vec2) {
+        self.kinematic_mut().apply_acceleration(acceleration);
     }
 }
 
@@ -21,19 +51,34 @@ pub struct Kinematic {
     acceleration: Vec2,
 }
 impl Kinematic {
-    pub fn new(position: Vec2, velocity: Vec2, acceleration: Vec2) -> Self {
-        return Self {
+    pub const fn new(position: Vec2, velocity: Vec2, acceleration: Vec2) -> Self {
+        Self {
             position,
             velocity,
             acceleration,
-        };
+        }
     }
 }
 impl KinematicGetters for Kinematic {
     fn kinematic(&self) -> &Kinematic {
-        return self;
+        self
+    }
+    fn position(&self) -> Vec2 {
+        self.position
+    }
+    fn velocity(&self) -> Vec2 {
+        self.velocity
+    }
+    fn acceleration(&self) -> Vec2 {
+        self.acceleration
     }
 }
+impl KinematicMutators for Kinematic {
+    fn kinematic_mut(&mut self) -> &mut Kinematic {
+        self
+    }
+}
+
 impl Kinematic {
     pub fn apply_acceleration(&mut self, acceleration: Vec2) {
         self.acceleration = self.acceleration.move_towards(acceleration, 0.01);
@@ -73,10 +118,10 @@ impl Kinematic {
         self.position = next_position;
         self.velocity = next_velocity;
     }
-    
+
     pub fn step_friction(&mut self) {
         // apply friction (using linear interpolation with <0, 0> aka lerp)
-        self.acceleration += (Vec2::ZERO - self.acceleration) * 0.02;
-        self.velocity += (Vec2::ZERO - self.velocity) * 0.02;
+        self.acceleration += self.acceleration * -0.02;
+        self.velocity += self.velocity * -0.02;
     }
 }
