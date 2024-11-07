@@ -6,8 +6,8 @@
 //! - draw a line between each vertex
 
 use crate::{
-    polar_vec2, rock_texture, Bullet, Draw, Kinematic, KinematicGetters, Player, RotationMatrix,
-    FRAC_SQRT3_2,
+    is_point_in_polygon, polar_vec2, rock_texture, Bullet, Draw, Kinematic, KinematicGetters,
+    KinematicMutators, Player, RotationMatrix, FRAC_SQRT3_2,
 };
 use macroquad::{prelude::*, rand::gen_range};
 use std::f32::consts::{FRAC_PI_2, TAU};
@@ -43,7 +43,7 @@ impl Asteroid {
 }
 impl Asteroid {
     pub fn many_random(count: usize) -> Vec<Self> {
-        return (0..count).map(|_| Asteroid::random()).collect();
+        (0..count).map(|_| Asteroid::random()).collect()
     }
     pub fn random() -> Self {
         let size = gen_range(Self::MIN_SIZE, Self::MAX_SIZE);
@@ -60,13 +60,13 @@ impl Asteroid {
         let orientation = gen_range(0.0, TAU);
         let rotation_speed = gen_range(Self::MIN_ROTATION_SPEED, Self::MAX_ROTATION_SPEED);
 
-        return Self {
+        Self {
             kinematic: Kinematic::new(position, velocity, Vec2::ZERO),
             size,
             orientation,
             rotation_speed,
             has_collided: false,
-        };
+        }
     }
     /// Creates another [Asteroid] with
     /// - the same position as `self`
@@ -75,32 +75,38 @@ impl Asteroid {
     /// - rotation speed scaled by [Self::CHILD_ROTATION_SPEED_FACTOR]
     /// - has **not** collided
     pub fn create_child(&self, velocity: Vec2) -> Self {
-        return Self {
+        Self {
             kinematic: Kinematic::new(self.position(), velocity, Vec2::ZERO),
             size: self.size * Self::CHILD_SIZE_FACTOR,
             orientation: self.orientation,
             rotation_speed: self.rotation_speed * Self::CHILD_ROTATION_SPEED_FACTOR,
             has_collided: false,
-        };
+        }
     }
     pub fn size(&self) -> f32 {
-        return self.size;
+        self.size
     }
     pub fn orientation(&self) -> f32 {
-        return self.orientation;
+        self.orientation
     }
     pub fn is_too_small(&self) -> bool {
-        return self.size < Self::MIN_SIZE;
+        self.size < Self::MIN_SIZE
     }
     pub fn has_collided(&self) -> bool {
-        return self.has_collided;
+        self.has_collided
+    }
+    pub fn is_alive(&self) -> bool {
+        !self.has_collided && self.size >= Self::MIN_SIZE
     }
     pub fn vertices(&self) -> [Vec2; 6] {
         let rotation = self.orientation.rotation_matrix();
         let position = self.position();
         let scale = self.size;
 
-        return Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position);
+        Self::UNIT_VERTICES.map(|vertex| (rotation * (vertex * scale)) + position)
+    }
+    pub fn is_point_inside(&self, point: Vec2) -> bool {
+        is_point_in_polygon(point, &self.vertices())
     }
     /// Returns two [Asteroid]s at the same position as `self` with opposite velocities perpendicular to `bullet_velocity`
     pub fn split(&self, bullet_velocity: Vec2) -> [Self; 2] {
@@ -114,30 +120,32 @@ impl Asteroid {
         let direction = vec2(-bullet_velocity.y, bullet_velocity.x).normalize();
 
         let velocity = speed * direction;
-        
-        return [
-            self.create_child(velocity),
-            self.create_child(-velocity),
-        ];
-    }
-}
-impl KinematicGetters for Asteroid {
-    fn kinematic(&self) -> &Kinematic {
-        return &self.kinematic;
+
+        [self.create_child(velocity), self.create_child(-velocity)]
     }
 }
 impl Asteroid {
-    pub fn destroy(&mut self) {
+    pub fn set_collided(&mut self) {
         self.has_collided = true;
     }
     pub fn step(&mut self) {
         self.rotate();
-        self.kinematic.cap_speed(Self::MAX_SPEED);
-        self.kinematic.keep_on_screen();
-        self.kinematic.step_motion();
+        self.cap_speed(Self::MAX_SPEED);
+        self.keep_on_screen();
+        self.step_motion();
     }
     pub fn rotate(&mut self) {
         self.orientation += self.rotation_speed;
+    }
+}
+impl KinematicGetters for Asteroid {
+    fn kinematic(&self) -> &Kinematic {
+        &self.kinematic
+    }
+}
+impl KinematicMutators for Asteroid {
+    fn kinematic_mut(&mut self) -> &mut Kinematic {
+        &mut self.kinematic
     }
 }
 impl Draw for Asteroid {

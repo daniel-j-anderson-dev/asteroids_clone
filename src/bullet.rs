@@ -1,12 +1,11 @@
 //! make a bullet struct that
-//! - is a small circle
+//! - drawn as a small circle
 //! - has a constant velocity
 //! - Starts from the front of the player (a vertex)
 //! - travels in the direction of the player (an angle)
 //! - disappears after n frames
 
-use crate::{polar_vec2, Kinematic};
-use crate::{Draw, KinematicGetters, Player};
+use crate::{polar_vec2, Draw, Kinematic, KinematicGetters, KinematicMutators, Player};
 use macroquad::prelude::*;
 pub struct Bullet {
     kinematic: Kinematic,
@@ -20,35 +19,34 @@ impl Bullet {
     pub const FRAMES_ALIVE: usize = 60;
 
     pub fn many_new() -> Vec<Self> {
-        return Vec::new();
-    }
-    pub fn new(player_front: Vec2, angle: f32) -> Self {
-        let velocity = polar_vec2(Self::SPEED, angle);
-
-        return Bullet {
-            kinematic: Kinematic::new(player_front, velocity, Vec2::ZERO),
-            frames_left: Self::FRAMES_ALIVE,
-            has_collided: false,
-        };
+        Vec::new()
     }
     pub fn is_too_old(&self) -> bool {
-        return self.frames_left == 0;
+        self.frames_left == 0
     }
     pub fn has_collided(&self) -> bool {
-        return self.has_collided;
+        self.has_collided
     }
-    pub fn destroy(&mut self) {
+    pub fn is_alive(&self) -> bool {
+        !self.has_collided && self.frames_left > 0
+    }
+    pub fn set_collided(&mut self) {
         self.has_collided = true;
     }
     pub fn step(&mut self) {
-        self.kinematic.step_motion();
-        self.kinematic.keep_on_screen();
+        self.step_motion();
+        self.keep_on_screen();
         self.frames_left = self.frames_left.saturating_sub(1);
     }
 }
 impl KinematicGetters for Bullet {
     fn kinematic(&self) -> &Kinematic {
-        return &self.kinematic;
+        &self.kinematic
+    }
+}
+impl KinematicMutators for Bullet {
+    fn kinematic_mut(&mut self) -> &mut Kinematic {
+        &mut self.kinematic
     }
 }
 impl Draw for Bullet {
@@ -59,6 +57,13 @@ impl Draw for Bullet {
 }
 impl From<&Player> for Bullet {
     fn from(player: &Player) -> Self {
-        return Bullet::new(player.vertices()[0], player.orientation());
+        let player_front = player.front_vertex();
+        let velocity = polar_vec2(Self::SPEED + player.speed(), player.orientation());
+
+        Bullet {
+            kinematic: Kinematic::new(player_front, velocity, Vec2::ZERO),
+            frames_left: Self::FRAMES_ALIVE,
+            has_collided: false,
+        }
     }
 }
