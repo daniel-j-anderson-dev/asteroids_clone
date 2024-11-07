@@ -2,7 +2,7 @@ use asteroids::*;
 use macroquad::prelude::*;
 
 fn settings() -> Conf {
-    return Conf {
+    Conf {
         window_title: String::from("Asteroids Clone"),
         window_width: 800,
         window_height: 800,
@@ -12,7 +12,7 @@ fn settings() -> Conf {
         sample_count: 100,
         icon: None,
         platform: Default::default(),
-    };
+    }
 }
 
 #[macroquad::main(settings)]
@@ -29,8 +29,8 @@ async fn main() {
         /* DRAW GAME */
         clear_background(BLACK);
         player.draw();
-        asteroids.iter().for_each(|a| a.draw());
-        bullets.iter().for_each(|b| b.draw());
+        asteroids.iter().for_each(Asteroid::draw);
+        bullets.iter().for_each(Bullet::draw);
 
         /* HANDLE INPUT */
         // Reset asteroids with space for testing
@@ -39,6 +39,7 @@ async fn main() {
         }
 
         // fire a bullet with a z press
+        player.handle_input();
         if is_key_pressed(KeyCode::Z) {
             bullets.push(Bullet::from(&player));
         }
@@ -48,12 +49,7 @@ async fn main() {
         for asteroid in asteroids.iter_mut() {
             for bullet in bullets.iter_mut() {
                 // if the bullet is inside the asteroid
-                if is_point_in_hexagon(
-                    bullet.position(),
-                    asteroid.position(),
-                    asteroid.orientation(),
-                    asteroid.size(),
-                ) {
+                if asteroid.is_point_inside(bullet.position()) {
                     // calculate the children asteroids
                     let new_children = asteroid.split(bullet.velocity());
 
@@ -61,11 +57,13 @@ async fn main() {
                     children.extend(new_children);
 
                     // destroy does NOT take ownership it just sets the has_collided field true
-                    asteroid.destroy();
-                    bullet.destroy();
+                    asteroid.set_collided();
+                    bullet.set_collided();
                 }
             }
-
+            if asteroid.has_collided() {
+                continue;
+            }
             // TODO: check for collision with player and asteroid and print on all collisions
         }
 
@@ -74,14 +72,14 @@ async fn main() {
         asteroids.append(&mut children);
 
         // Only keep bullets and asteroids that are alive or valid.
-        bullets.retain(|b| !b.has_collided() && !b.is_too_old());
-        asteroids.retain(|a| !a.has_collided() && !a.is_too_small());
+        asteroids.retain(Asteroid::is_alive);
+        bullets.retain(Bullet::is_alive);
         // Is the player alive?
 
         /* UPDATE GAME PHYSICS */
         player.step();
-        asteroids.iter_mut().for_each(|a| a.step());
-        bullets.iter_mut().for_each(|b| b.step());
+        asteroids.iter_mut().for_each(Asteroid::step);
+        bullets.iter_mut().for_each(Bullet::step);
 
         next_frame().await;
     }
